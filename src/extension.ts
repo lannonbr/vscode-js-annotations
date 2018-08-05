@@ -1,110 +1,111 @@
 import * as vscode from "vscode";
+import functionCallObject from './functionCallObject';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "vscode-js-named-params-annotations" is now active!'
-  );
-
-  let disposable = vscode.commands.registerCommand("extension.sayHello", () => {
-    vscode.window.showInformationMessage("Hello World!");
-  });
-
+  console.log('extension is now active!');
   decorate();
-
-  context.subscriptions.push(disposable);
 }
 
 async function decorate(): Promise<void> {
-  // const editors = vscode.window.visibleTextEditors.filter(
-  //   editor => editor.document.languageId === "javascript"
-  // );
+  // Grab the visible editor
+  const editor = vscode.window.activeTextEditor;
 
-  const editors = [vscode.window.activeTextEditor];
+  if (!editor) return;
 
-  let linesArr: functionCallObject[] = [];
+  // Get all of the text in said editor
+  let sourceCode = editor.document.getText();
 
-  for (let editor of editors) {
-    if (!editor) {
-      return;
-    }
-    let sourceCode = editor.document.getText();
+  // get an array of all said function calls in the file
+  let fcArray = getFunctionCalls(sourceCode, editor);
 
-    // let regex = /(?:(\.)|(\w+\.))?(\w+)\((([A-Za-z\]\[\{\}0-9]*,? ?)*)\)/gm;
+  // grab the definitions for any of the function calls which can find a definition
+  fcArray = await getDefinitions(fcArray, editor.document.uri);
 
-    let regex = /(\w+)?(\.)?(\w+)\((([\"A-Za-z\]\[\{\}0-9, ]*)*)\)/;
+  // cache for documents so they aren't loaded for every single call
+  var documentCache: any = {};
 
-    let sourceCodeArr = sourceCode.split("\n");
-    let sourceCodeArrLength = sourceCodeArr.length;
+  // filter down to function calls which actually have a definition
+  let callsWithDefinitions = fcArray.filter(item => {
+    return item.definitionLocation !== undefined;
+  })
 
-    for (let i = 0; i < sourceCodeArrLength; i++) {
-      let arr = sourceCodeArr[i].match(regex);
+  for (let fc of callsWithDefinitions) {
+    let document: vscode.TextDocument;
 
-      if (arr) {
-        // console.log(arr.index);
-        // console.log(arr);
-        // console.log(sourceCodeArr[i]);
+    if (fc.definitionLocation === undefined) continue;
 
-        if (arr.index) {
-          let range = editor.document.getWordRangeAtPosition(
-            new vscode.Position(
-              i,
-              arr.index +
-              (arr[1] ? arr[1].length : 0) +
-              (arr[2] ? arr[2].length : 0)
-            )
-          );
-          // console.log(range, arr);
+    // Currently index documentCache by the filename (TODO: Figure out better index later)
+    let pathNameArr = fc.definitionLocation.uri.fsPath.split("/");
+    let pathName = pathNameArr[pathNameArr.length - 1];
 
-          // console.log(
-          //   `Code at L${i}, C${arr.index}: ${editor.document.getText(range)}`
-          // );
-
-          let newfuncObj = {
-            lineNumber: i,
-            fullMatch: arr,
-            functionCaller: arr[1] ? arr[1] : undefined,
-            functionName: arr[3],
-            functionRange: range,
-            params: arr[4] ? arr[4].split(",") : undefined
-          };
-
-          linesArr.push(newfuncObj);
-        }
-      }
+    // If the document is not present in the cache, load it from the filesystem, otherwise grab from the cache
+    if (documentCache[pathName] === undefined) {
+      document = await vscode.workspace.openTextDocument(fc.definitionLocation.uri);
+      documentCache[pathName] = document;
+    } else {
+      document = documentCache[pathName];
     }
 
-    for (let line of linesArr) {
-      console.log("newFuncObj");
-      console.log(line);
+    // create a Range on the line of the definition location with characters 0-1000 which should suffice for most definitions
+    let lineRange = new vscode.Range(new vscode.Position(fc.definitionLocation.range.start.line, 0), new vscode.Position(fc.definitionLocation.range.start.line, 1000));
 
-      if (line.functionRange) {
-        let uri = editor.document.uri;
-
-        await vscode.commands.executeCommand("vscode.executeDefinitionProvider", uri, line.functionRange.start)
-          .then(succ => {
-            let loc = succ as vscode.Location[];
-            if (loc && loc.length > 0) {
-              vscode.workspace.openTextDocument(loc[0].uri).then(document => {
-                console.log(document.fileName);
-                let str = document.getText(new vscode.Range(new vscode.Position(loc[0].range.start.line, 0), new vscode.Position(loc[0].range.start.line, 500)));
-                console.log(str);
-              })
-            }
-          },
-            err => console.log("ERR", err)
-          );
-      }
-    }
+    console.log({ call: fc.functionName, def: document.getText(lineRange) });
   }
 }
 
-interface functionCallObject {
-  lineNumber: number;
-  fullMatch: RegExpMatchArray;
-  functionCaller?: string;
-  functionName: string;
-  params?: string[];
-  functionRange?: vscode.Range;
+function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functionCallObject[] {
+  let fcArray: functionCallObject[] = [];
+
+  // Regex to match function calls
+  let regex = /(\w+)?\.?(\w+)\((([\"A-Za-z\]\[\{\}0-9, ]*)*)\)/;
+
+  // Split the source code into an array of each line
+  let sourceCodeArray = sourceCode.split("\n");
+
+  let lineNumber = 0;
+
+  for (let line of sourceCodeArray) {
+    let functionCallMatch = line.match(regex);
+
+    if (functionCallMatch !== null && functionCallMatch.index !== undefined) {
+      let caller = functionCallMatch[1]; // function caller (i.e. document.getElementById has a caller of document)
+
+      // Get location of function in source code
+      let wordRange = editor.document.getWordRangeAtPosition(new vscode.Position(lineNumber, functionCallMatch.index + (caller ? caller.length + 1 : 0)));
+
+      let newFunctionCallObject = {
+        lineNumber,
+        fullMatch: functionCallMatch,
+        functionCaller: caller ? caller : undefined,
+        functionName: functionCallMatch[2],
+        functionRange: wordRange,
+        params: functionCallMatch[3] ? functionCallMatch[3].split(",") : undefined
+      };
+
+      fcArray.push(newFunctionCallObject);
+    }
+
+    lineNumber++;
+  }
+
+  return fcArray;
 }
 
-export function deactivate() { }
+async function getDefinitions(fcArray: functionCallObject[], uri: vscode.Uri): Promise<functionCallObject[]> {
+  return new Promise<functionCallObject[]>(async function (resolve, reject) {
+    for (let fc of fcArray) {
+      if (fc.functionRange === undefined) continue;
+
+      // grab an array of locations for the definitions of a function call
+      let locations = await vscode.commands.executeCommand<vscode.Location[]>("vscode.executeDefinitionProvider", uri, fc.functionRange.start);
+
+      // If it exists, set the definitionLocation to the first result
+      if (locations !== undefined && locations.length > 0) {
+        fc.definitionLocation = locations[0];
+      }
+    }
+
+    resolve(fcArray);
+  })
+
+}
