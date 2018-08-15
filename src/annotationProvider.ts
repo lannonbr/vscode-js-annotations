@@ -7,7 +7,9 @@ export class Annotations {
       renderOptions: {
         before: {
           contentText: message,
-          color: "#a6a6a6"
+          color: "#a6a6a6",
+          fontStyle: "italic",
+          fontWeight: "800"
         }
       } as DecorationInstanceRenderOptions
     } as DecorationOptions;

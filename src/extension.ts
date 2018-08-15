@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import functionCallObject from './functionCallObject';
 import { Annotations } from './annotationProvider';
+import { parseScript } from 'esprima';
 
 let decType = vscode.window.createTextEditorDecorationType({});
 
@@ -41,6 +42,8 @@ async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<vo
   // cache for documents so they aren't loaded for every single call
   var documentCache: any = {};
 
+  console.log(fcArray)
+
   // filter down to function calls which actually have a definition
   let callsWithDefinitions = fcArray.filter(item => item.definitionLocation !== undefined);
 
@@ -48,43 +51,45 @@ async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<vo
     await decorateFunctionCall(editor, documentCache, decArray, fc);
   }
 
+  console.log(decArray);
+
   editor.setDecorations(decType, decArray);
 }
 
 function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functionCallObject[] {
   let fcArray: functionCallObject[] = [];
 
-  // Regex to match function calls
-  let regex = /(\w+)?\.?(\w+)\((([\"A-Za-z:\]\[\{\}0-9,\- ]*)*)\)/;
+  parseScript(sourceCode, {
+    loc: true
+  }, function (node) {
+    if (node !== null && node !== undefined && node.type === 'CallExpression') {
+      if (node.callee.loc !== null && node.callee.loc !== undefined && node.callee !== null && node.callee !== undefined) {
+        
+        console.log(node)
 
-  // Split the source code into an array of each line
-  let sourceCodeArray = sourceCode.split("\n");
+        let startArr
+        let endArr
 
-  let lineNumber = 0;
+        if (node.callee.type === "MemberExpression" && node.callee.property.loc) {
+          startArr = [node.callee.property.loc.start.line-1, node.callee.property.loc.start.column]
+          endArr = [node.callee.property.loc.end.line-1, node.callee.property.loc.end.column]
+        } else {
+          startArr = [node.callee.loc.start.line-1, node.callee.loc.start.column]
+          endArr = [node.callee.loc.end.line-1, node.callee.loc.end.column]
+        }
 
-  for (let line of sourceCodeArray) {
-    let functionCallMatch = line.match(regex);
+        let start = new vscode.Position(startArr[0], startArr[1])
+        let end = new vscode.Position(endArr[0], endArr[1])
 
-    if (functionCallMatch !== null && functionCallMatch.index !== undefined) {
-      let caller = functionCallMatch[1]; // function caller (i.e. document.getElementById has a caller of document)
+        let newFunctionCallObject = {
+          lineNumber: start.line,
+          functionRange: new vscode.Range(start, end)
+        }
 
-      // Get location of function in source code
-      let wordRange = editor.document.getWordRangeAtPosition(new vscode.Position(lineNumber, functionCallMatch.index + (caller ? caller.length + 1 : 0)));
-
-      let newFunctionCallObject = {
-        lineNumber,
-        fullMatch: functionCallMatch,
-        functionCaller: caller ? caller : undefined,
-        functionName: functionCallMatch[2],
-        functionRange: wordRange,
-        params: functionCallMatch[3] ? functionCallMatch[3].split(",") : undefined
-      };
-
-      fcArray.push(newFunctionCallObject);
+        fcArray.push(newFunctionCallObject)
+      }
     }
-
-    lineNumber++;
-  }
+  });
 
   return fcArray;
 }
@@ -99,6 +104,7 @@ async function getDefinitions(fcArray: functionCallObject[], uri: vscode.Uri): P
 
       // If it exists, set the definitionLocation to the first result
       if (locations !== undefined && locations.length > 0) {
+        console.log(fc, locations[0])
         fc.definitionLocation = locations[0];
       }
     }
@@ -126,7 +132,6 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
   }
 
   let defObj = {
-    call: fc.functionName,
     defFile: fc.definitionLocation.uri.toJSON(),
     defLine: document.lineAt(fc.definitionLocation.range.start.line).text
   };
