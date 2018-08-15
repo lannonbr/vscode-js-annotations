@@ -2,12 +2,22 @@ import * as vscode from "vscode";
 import functionCallObject from './functionCallObject';
 import { Annotations } from './annotationProvider';
 
+let decType = vscode.window.createTextEditorDecorationType({});
+
 export function activate(context: vscode.ExtensionContext) {
   console.log('extension is now active!');
 
+  // Update when a file opens
   vscode.window.onDidChangeActiveTextEditor(editor => {
     decorateEditor(editor).catch(console.log);
   });
+
+  // Update when a file saves
+  vscode.workspace.onWillSaveTextDocument(event => {
+    let openEditor = vscode.window.visibleTextEditors.filter(editor => editor.document.uri === event.document.uri)[0];
+
+    decorateEditor(openEditor).catch(console.log);
+  })
 }
 
 export function deactivate() {
@@ -38,7 +48,6 @@ async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<vo
     await decorateFunctionCall(editor, documentCache, decArray, fc);
   }
 
-  let decType = vscode.window.createTextEditorDecorationType({});
   editor.setDecorations(decType, decArray);
 }
 
