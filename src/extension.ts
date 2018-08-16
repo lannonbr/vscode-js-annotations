@@ -63,27 +63,51 @@ function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functi
     loc: true
   }, function (node) {
     if (node !== null && node !== undefined && node.type === 'CallExpression') {
-      if (node.callee.loc !== null && node.callee.loc !== undefined && node.callee !== null && node.callee !== undefined) {
-        
+      if (node.callee && node.callee.loc) {
+
         console.log(node)
 
         let startArr
         let endArr
 
         if (node.callee.type === "MemberExpression" && node.callee.property.loc) {
-          startArr = [node.callee.property.loc.start.line-1, node.callee.property.loc.start.column]
-          endArr = [node.callee.property.loc.end.line-1, node.callee.property.loc.end.column]
+          let propLoc = node.callee.property.loc;
+
+          startArr = [propLoc.start.line-1, propLoc.start.column];
+          endArr = [propLoc.end.line-1, propLoc.end.column];
         } else {
-          startArr = [node.callee.loc.start.line-1, node.callee.loc.start.column]
-          endArr = [node.callee.loc.end.line-1, node.callee.loc.end.column]
+          let calleeLoc = node.callee.loc;
+
+          startArr = [calleeLoc.start.line-1, calleeLoc.start.column];
+          endArr = [calleeLoc.end.line-1, calleeLoc.end.column];
         }
 
-        let start = new vscode.Position(startArr[0], startArr[1])
-        let end = new vscode.Position(endArr[0], endArr[1])
+        let start = new vscode.Position(startArr[0], startArr[1]);
+        let end = new vscode.Position(endArr[0], endArr[1]);
 
-        let newFunctionCallObject = {
+        let newFunctionCallObject: functionCallObject = {
           lineNumber: start.line,
           functionRange: new vscode.Range(start, end)
+        }
+
+        let paramLocationsArr: vscode.Range[] = [];
+
+        if (node.arguments) {
+          node.arguments.forEach(arg => {
+            if (arg.loc) {
+              startArr = [arg.loc.start.line-1, arg.loc.start.column];
+              endArr = [arg.loc.end.line-1, arg.loc.end.column];
+
+              let argRange = new vscode.Range(
+                new vscode.Position(startArr[0], startArr[1]),
+                new vscode.Position(endArr[0], endArr[1])
+              );
+
+              paramLocationsArr.push(argRange);
+            }
+          });
+
+          newFunctionCallObject.paramLocations = paramLocationsArr;
         }
 
         fcArray.push(newFunctionCallObject)
@@ -161,25 +185,9 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
     // If the line that is extracted is a function definition rather than call, continue on without doing anything
     if (functionCallLine.includes('function ')) return;
 
-    // Matches for arguments
-    let functionCallArgumentsMatches = functionCallLine.match(paramRegex);
-
-    if (functionCallArgumentsMatches) {
-      let argList = functionCallArgumentsMatches[1].split(/\s*,\s*/);
-
-      let lineNum = fc.lineNumber;
-
-      for (let idx in argList) {
-        let startPos = functionCallLine.indexOf(argList[idx]);
-        let endPos = startPos + argList[idx].length
-
-        // Location where the annotation will be placed before
-        let paramRange = new vscode.Range(
-          new vscode.Position(lineNum, startPos),
-          new vscode.Position(lineNum, endPos)
-        );
-
-        let decoration = Annotations.paramAnnotation(paramList[idx] + ": ", paramRange);
+    if (fc.paramLocations) {
+      for (let idx in fc.paramLocations) {
+        let decoration = Annotations.paramAnnotation(paramList[idx] + ": ", fc.paramLocations[idx]);
         decArray.push(decoration);
       }
     }
