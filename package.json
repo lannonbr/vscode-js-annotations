@@ -1,28 +1,29 @@
 {
-  "name": "vscode-js-named-params-annotations",
-  "displayName": "JS Named Parameter Annotations",
+  "name": "vscode-js-annotations",
+  "displayName": "JS Parameter Annotations",
   "description": "Annotaions for parameters in your JS Files to mimic named parameters",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
   },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lannonbr/vscode-js-annotations"
+  },
   "categories": [
     "Other"
   ],
+  "homepage": "https://github.com/lannonbr/vscode-js-annotations",
+  "bugs": {
+    "url": "https://github.com/lannonbr/vscode-js-annotations/issues"
+  },
   "activationEvents": [
-    "onCommand:extension.sayHello",
     "onLanguage:javascript"
   ],
   "main": "./out/extension",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.sayHello",
-        "title": "Hello World"
-      }
-    ]
-  },
+  "contributes": {},
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",

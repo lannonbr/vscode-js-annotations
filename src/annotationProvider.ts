@@ -5,10 +5,18 @@ export class Annotations {
     return {
       range,
       renderOptions: {
+        light: {
+          before: {
+            color: "#444"
+          }
+        },
+        dark: {
+          before: {
+            color: "#ccc"
+          }
+        },
         before: {
           contentText: message,
-          color: "#a6a6a6",
-          fontStyle: "italic",
           fontWeight: "800"
         }
       } as DecorationInstanceRenderOptions
