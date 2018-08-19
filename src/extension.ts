@@ -1,7 +1,9 @@
 import * as vscode from "vscode";
+import { parseScript } from 'esprima';
+
 import functionCallObject from './functionCallObject';
 import { Annotations } from './annotationProvider';
-import { parseScript } from 'esprima';
+import Commands from "./commands";
 
 let decType = vscode.window.createTextEditorDecorationType({});
 
@@ -18,7 +20,16 @@ export function activate(context: vscode.ExtensionContext) {
     let openEditor = vscode.window.visibleTextEditors.filter(editor => editor.document.uri === event.document.uri)[0];
 
     decorateEditor(openEditor).catch(console.log);
+  });
+
+  // Update if the config was changed
+  vscode.workspace.onDidChangeConfiguration(event => {
+    if (event.affectsConfiguration('jsannotations')) {
+      decorateEditor(vscode.window.activeTextEditor);
+    }
   })
+
+  Commands.registerCommands()
 }
 
 export function deactivate() {
@@ -27,6 +38,15 @@ export function deactivate() {
 
 async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<void> {
   if (!editor) return;
+
+  if (editor.document.languageId !== 'javascript') return;
+
+  let enabled = vscode.workspace.getConfiguration('jsannotations').get('enabled');
+
+  if (!enabled) {
+    editor.setDecorations(decType, []);
+    return;
+  }
 
   let decArray: vscode.DecorationOptions[] = [];
 
@@ -42,16 +62,12 @@ async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<vo
   // cache for documents so they aren't loaded for every single call
   var documentCache: any = {};
 
-  console.log(fcArray)
-
   // filter down to function calls which actually have a definition
   let callsWithDefinitions = fcArray.filter(item => item.definitionLocation !== undefined);
 
   for (let fc of callsWithDefinitions) {
     await decorateFunctionCall(editor, documentCache, decArray, fc);
   }
-
-  console.log(decArray);
 
   editor.setDecorations(decType, decArray);
 }
@@ -64,8 +80,6 @@ function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functi
   }, function (node) {
     if (node !== null && node !== undefined && node.type === 'CallExpression') {
       if (node.callee && node.callee.loc) {
-
-        console.log(node)
 
         let startArr
         let endArr
@@ -128,7 +142,6 @@ async function getDefinitions(fcArray: functionCallObject[], uri: vscode.Uri): P
 
       // If it exists, set the definitionLocation to the first result
       if (locations !== undefined && locations.length > 0) {
-        console.log(fc, locations[0])
         fc.definitionLocation = locations[0];
       }
     }

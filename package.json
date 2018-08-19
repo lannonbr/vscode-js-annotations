@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotaions for parameters in your JS Files to mimic named parameters",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -23,7 +23,46 @@
     "onLanguage:javascript"
   ],
   "main": "./out/extension",
-  "contributes": {},
+  "contributes": {
+    "commands": [
+      {
+        "command": "jsannotations.toggle",
+        "title": "JS Annotations: Hide / Show Annotations"
+      }
+    ],
+    "configuration":[
+      {
+        "title": "JS Annotations",
+        "properties": {
+          "jsannotations.enabled": {
+            "type": "boolean",
+            "description": "Enable JS Annotations",
+            "default": true
+          },
+          "jsannotations.colors": {
+            "type": "object",
+            "description": "Annotation colors for light and dark themes",
+            "default": {
+              "lightColor": "#444",
+              "darkColor": "#ccc"
+            },
+            "properties": {
+              "lightColor": {
+                "type": "string",
+                "default": "#444",
+                "description": "Hex code for light color (ex: #444444)"
+              },
+              "darkColor": {
+                "type": "string",
+                "default": "#ccc",
+                "description": "Hex code for dark color (ex: #cccccc)"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",

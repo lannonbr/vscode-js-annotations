@@ -1,23 +1,26 @@
-import { Range, DecorationInstanceRenderOptions, DecorationOptions } from "vscode";
+import { Range, DecorationInstanceRenderOptions, DecorationOptions, workspace } from "vscode";
 
 export class Annotations {
   static paramAnnotation(message: string, range: Range): DecorationOptions {
+    let lightColor = workspace.getConfiguration('jsannotations.colors').get('lightColor');
+    let darkColor = workspace.getConfiguration('jsannotations.colors').get('darkColor');
+
     return {
       range,
       renderOptions: {
         light: {
           before: {
-            color: "#444"
+            color: lightColor
           }
         },
         dark: {
           before: {
-            color: "#ccc"
+            color: darkColor
           }
         },
         before: {
           contentText: message,
-          fontWeight: "800"
+          fontStyle: "italic"
         }
       } as DecorationInstanceRenderOptions
     } as DecorationOptions;
