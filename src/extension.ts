@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { parseScript } from 'esprima';
+import * as esprima from 'esprima';
+import * as recast from 'recast';
 
 import functionCallObject from './functionCallObject';
 import { Annotations } from './annotationProvider';
@@ -39,7 +40,7 @@ export function deactivate() {
 async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<void> {
   if (!editor) return;
 
-  if (editor.document.languageId !== 'javascript') return;
+  if (!(editor.document.languageId === 'javascript' || editor.document.languageId === 'typescript')) return;
 
   let enabled = vscode.workspace.getConfiguration('jsannotations').get('enabled');
 
@@ -75,59 +76,96 @@ async function decorateEditor(editor: vscode.TextEditor | undefined): Promise<vo
 function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functionCallObject[] {
   let fcArray: functionCallObject[] = [];
 
-  parseScript(sourceCode, {
-    loc: true
-  }, function (node) {
-    if (node !== null && node !== undefined && node.type === 'CallExpression') {
-      if (node.callee && node.callee.loc) {
+  let options = { parser: null };
 
-        let startArr
-        let endArr
+  if (editor.document.languageId === 'javascript') {
+    options.parser = require('recast/parsers/esprima');
+  } else if (editor.document.languageId === 'typescript') {
+    options.parser = require('recast/parsers/typescript');
+  }
 
-        if (node.callee.type === "MemberExpression" && node.callee.property.loc) {
-          let propLoc = node.callee.property.loc;
+  var ast = recast.parse(sourceCode, options);
 
-          startArr = [propLoc.start.line-1, propLoc.start.column];
-          endArr = [propLoc.end.line-1, propLoc.end.column];
-        } else {
-          let calleeLoc = node.callee.loc;
+  fcArray = lookForFunctionCalls(fcArray, ast.program.body)
 
-          startArr = [calleeLoc.start.line-1, calleeLoc.start.column];
-          endArr = [calleeLoc.end.line-1, calleeLoc.end.column];
+  return fcArray;
+}
+
+function lookForFunctionCalls(fcArray: functionCallObject[], body: any): functionCallObject[] {
+  let arr = [];
+
+  function getNodes(body, arr) {
+    for(let key in body) {
+      let item = body[key];
+
+      if (item !== undefined && item !== null && typeof item !== 'string' && typeof item !== 'function' && item.length !== undefined) {
+        for (let subItem of item) {
+          arr = getNodes(subItem, arr)
         }
-
-        let start = new vscode.Position(startArr[0], startArr[1]);
-        let end = new vscode.Position(endArr[0], endArr[1]);
-
-        let newFunctionCallObject: functionCallObject = {
-          lineNumber: start.line,
-          functionRange: new vscode.Range(start, end)
-        }
-
-        let paramLocationsArr: vscode.Range[] = [];
-
-        if (node.arguments) {
-          node.arguments.forEach(arg => {
-            if (arg.loc) {
-              startArr = [arg.loc.start.line-1, arg.loc.start.column];
-              endArr = [arg.loc.end.line-1, arg.loc.end.column];
-
-              let argRange = new vscode.Range(
-                new vscode.Position(startArr[0], startArr[1]),
-                new vscode.Position(endArr[0], endArr[1])
-              );
-
-              paramLocationsArr.push(argRange);
-            }
-          });
-
-          newFunctionCallObject.paramLocations = paramLocationsArr;
-        }
-
-        fcArray.push(newFunctionCallObject)
+      } else if (item !== undefined && item !== null && item.loc !== undefined) {
+        arr.push(item)
+        arr = getNodes(item, arr)
       }
     }
-  });
+
+    return arr;
+  }
+
+  arr = getNodes(body, arr)
+
+  arr = arr.filter(node => {
+    return node.type === 'CallExpression'
+  })
+
+  for (let node of arr) {
+    if (node.callee && node.callee.loc) {
+
+      let startArr
+      let endArr
+
+      if (node.callee.type === "MemberExpression" && node.callee.property.loc) {
+        let propLoc = node.callee.property.loc;
+
+        startArr = [propLoc.start.line - 1, propLoc.start.column];
+        endArr = [propLoc.end.line - 1, propLoc.end.column];
+      } else {
+        let calleeLoc = node.callee.loc;
+
+        startArr = [calleeLoc.start.line - 1, calleeLoc.start.column];
+        endArr = [calleeLoc.end.line - 1, calleeLoc.end.column];
+      }
+
+      let start = new vscode.Position(startArr[0], startArr[1]);
+      let end = new vscode.Position(endArr[0], endArr[1]);
+
+      let newFunctionCallObject: functionCallObject = {
+        lineNumber: start.line,
+        functionRange: new vscode.Range(start, end)
+      }
+
+      let paramLocationsArr: vscode.Range[] = [];
+
+      if (node.arguments) {
+        node.arguments.forEach(arg => {
+          if (arg.loc) {
+            startArr = [arg.loc.start.line - 1, arg.loc.start.column];
+            endArr = [arg.loc.end.line - 1, arg.loc.end.column];
+
+            let argRange = new vscode.Range(
+              new vscode.Position(startArr[0], startArr[1]),
+              new vscode.Position(endArr[0], endArr[1])
+            );
+
+            paramLocationsArr.push(argRange);
+          }
+        });
+
+        newFunctionCallObject.paramLocations = paramLocationsArr;
+      }
+
+      fcArray.push(newFunctionCallObject)
+    }
+  }
 
   return fcArray;
 }

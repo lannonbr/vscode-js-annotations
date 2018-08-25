@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotaions for parameters in your JS Files to mimic named parameters",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -20,7 +20,8 @@
     "url": "https://github.com/lannonbr/vscode-js-annotations/issues"
   },
   "activationEvents": [
-    "onLanguage:javascript"
+    "onLanguage:javascript",
+    "onLanguage:typescript"
   ],
   "main": "./out/extension",
   "contributes": {
@@ -30,7 +31,7 @@
         "title": "JS Annotations: Hide / Show Annotations"
       }
     ],
-    "configuration":[
+    "configuration": [
       {
         "title": "JS Annotations",
         "properties": {
@@ -69,13 +70,13 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "@types/esprima": "^4.0.2",
     "@types/mocha": "^2.2.42",
     "@types/node": "^7.0.43",
     "typescript": "^2.6.1",
     "vscode": "^1.1.6"
   },
   "dependencies": {
-    "esprima": "^4.0.1"
+    "babylon": "^7.0.0-beta.47",
+    "recast": "^0.15.3"
   }
 }

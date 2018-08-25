@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 - Aug 24, 2018
+- [Feature] Now supports Typescript
+
 ## 0.2.1 - Aug 20, 2018
 - [Hotfix] Added keybinding for toggling annotations ('ctrl/cmd+k a' by default)
 - [Hotfix] Switched color config to use builtin 'colors' contributes property
