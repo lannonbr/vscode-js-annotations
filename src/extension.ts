@@ -84,18 +84,20 @@ function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functi
     options.parser = require('recast/parsers/typescript');
   }
 
+  let tabSize = editor.options.tabSize as number;
+
   var ast = recast.parse(sourceCode, options);
 
-  fcArray = lookForFunctionCalls(fcArray, ast.program.body)
+  fcArray = lookForFunctionCalls(editor, fcArray, ast.program.body, tabSize);
 
   return fcArray;
 }
 
-function lookForFunctionCalls(fcArray: functionCallObject[], body: any): functionCallObject[] {
+function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: functionCallObject[], body: any, tabSize: number): functionCallObject[] {
   let arr = [];
 
   function getNodes(body, arr) {
-    for(let key in body) {
+    for (let key in body) {
       let item = body[key];
 
       if (item !== undefined && item !== null && typeof item !== 'string' && typeof item !== 'function' && item.length !== undefined) {
@@ -151,9 +153,19 @@ function lookForFunctionCalls(fcArray: functionCallObject[], body: any): functio
             startArr = [arg.loc.start.line - 1, arg.loc.start.column];
             endArr = [arg.loc.end.line - 1, arg.loc.end.column];
 
+            let line = editor.document.lineAt(startArr[0]);
+
+            let offset;
+
+            if (editor.options.insertSpaces) {
+              offset = 0;
+            } else {
+              offset = line.firstNonWhitespaceCharacterIndex * 3
+            }
+
             let argRange = new vscode.Range(
-              new vscode.Position(startArr[0], startArr[1]),
-              new vscode.Position(endArr[0], endArr[1])
+              new vscode.Position(startArr[0], startArr[1] - offset),
+              new vscode.Position(endArr[0], endArr[1] - offset)
             );
 
             paramLocationsArr.push(argRange);

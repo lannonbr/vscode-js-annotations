@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.2 - Aug 25, 2018
+- [Bug] files using tabs as indentation were misaligning annotation
+
+## 0.3.1 - Aug 24, 2018
+- [Hotfix] Updated Readme
+
 ## 0.3.0 - Aug 24, 2018
 - [Feature] Now supports Typescript
 
