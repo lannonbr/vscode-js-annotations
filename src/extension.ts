@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as esprima from 'esprima';
 import * as recast from 'recast';
 
 import functionCallObject from './functionCallObject';
@@ -140,7 +139,16 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: functionCallOb
       let start = new vscode.Position(startArr[0], startArr[1]);
       let end = new vscode.Position(endArr[0], endArr[1]);
 
+      let calleeName;
+
+      if (node.callee.type === "MemberExpression") {
+        calleeName = node.callee.property.name;
+      } else if (node.callee.type === "Identifier") {
+        calleeName = node.callee.name;
+      }
+
       let newFunctionCallObject: functionCallObject = {
+        functionName: calleeName,
         lineNumber: start.line,
         functionRange: new vscode.Range(start, end)
       }
@@ -243,10 +251,16 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
       return "";
     }).filter(param => param !== "");
 
+    // If the functionName is one of the parameters, don't decorate it
+    if (paramList.some(param => param === fc.functionName)) return;
+
     let functionCallLine = currentEditor.document.lineAt(fc.lineNumber).text;
 
     // If the line that is extracted is a function definition rather than call, continue on without doing anything
     if (functionCallLine.includes('function ')) return;
+
+    // Don't decorate if the definition is inside a for loop
+    if (defObj.defLine.includes('for (') || defObj.defLine.includes('for (')) return;
 
     if (fc.paramLocations) {
       for (let idx in fc.paramLocations) {

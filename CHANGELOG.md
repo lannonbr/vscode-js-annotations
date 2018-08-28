@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 - Aug 27, 2018
+- [Bug] for-of loop iterating through functions could cause incorrect decoration.
+- [Bug] callback functions could cause incorrect decorations.
+
 ## 0.3.2 - Aug 25, 2018
 - [Bug] files using tabs as indentation were misaligning annotation
 
