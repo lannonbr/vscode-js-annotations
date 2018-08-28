@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotaions for parameters in your JS / TS Files to mimic named parameters",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -39,6 +39,11 @@
             "type": "boolean",
             "description": "Enable JS Annotations",
             "default": true
+          },
+          "jsannotations.hideIfEqual": {
+            "type": "boolean",
+            "description": "Hide annotation if argument name matches parameter name",
+            "default": false
           }
         }
       }

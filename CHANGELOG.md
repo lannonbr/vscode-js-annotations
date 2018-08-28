@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.0 - Aug 27, 2018
+- [Feature] new config: jsannotations.hideIfEqual - will not display annotation if the name of the argument matches the name of the parameter (configured to be false by default).
+
 ## 0.3.3 - Aug 27, 2018
 - [Bug] for-of loop iterating through functions could cause incorrect decoration.
 - [Bug] callback functions could cause incorrect decorations.

@@ -154,6 +154,7 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: functionCallOb
       }
 
       let paramLocationsArr: vscode.Range[] = [];
+      let paramNamesArr: string[] = [];
 
       if (node.arguments) {
         node.arguments.forEach(arg => {
@@ -176,11 +177,18 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: functionCallOb
               new vscode.Position(endArr[0], endArr[1] - offset)
             );
 
+            if (arg.value) {
+              paramNamesArr.push(arg.value);
+            } else {
+              paramNamesArr.push(arg.name);
+            }
+
             paramLocationsArr.push(argRange);
           }
         });
 
         newFunctionCallObject.paramLocations = paramLocationsArr;
+        newFunctionCallObject.paramNames = paramNamesArr;
       }
 
       fcArray.push(newFunctionCallObject)
@@ -213,6 +221,9 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
   let document: vscode.TextDocument;
 
   if (fc === undefined || fc.definitionLocation === undefined) return;
+
+  // config option to hide annotations if param and arg names match
+  let hideIfEqual = vscode.workspace.getConfiguration('jsannotations').get('hideIfEqual')
 
   // Currently index documentCache by the filename (TODO: Figure out better index later)
   let pathNameArr = fc.definitionLocation.uri.fsPath.split("/");
@@ -262,8 +273,9 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
     // Don't decorate if the definition is inside a for loop
     if (defObj.defLine.includes('for (') || defObj.defLine.includes('for (')) return;
 
-    if (fc.paramLocations) {
+    if (fc.paramLocations && fc.paramNames) {
       for (let idx in fc.paramLocations) {
+        if (hideIfEqual && fc.paramNames[idx] === paramList[idx]) continue;
         let decoration = Annotations.paramAnnotation(paramList[idx] + ": ", fc.paramLocations[idx]);
         decArray.push(decoration);
       }
