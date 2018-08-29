@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.1 - Aug 28, 2018
+- [Hotfix] switched jsannotations.hideIfEqual to be on by default
+
 ## 0.4.0 - Aug 27, 2018
 - [Feature] new config: jsannotations.hideIfEqual - will not display annotation if the name of the argument matches the name of the parameter (configured to be false by default).
 
