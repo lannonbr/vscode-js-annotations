@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.2 - Aug 29, 2018
+- [Bug] fixed issue where #! would break parser and cause annotations not to occur.
+
 ## 0.4.1 - Aug 28, 2018
 - [Hotfix] switched jsannotations.hideIfEqual to be on by default
 

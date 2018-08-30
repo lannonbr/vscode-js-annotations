@@ -85,6 +85,13 @@ function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor): functi
 
   let tabSize = editor.options.tabSize as number;
 
+  // Removing shebangs in source code
+  let sourceCodeArr = sourceCode.split("\n")
+  if (sourceCodeArr[0].substr(0, 2) === "#!") {
+    sourceCodeArr[0] = "";
+  }
+  sourceCode = sourceCodeArr.join("\n")
+
   var ast = recast.parse(sourceCode, options);
 
   fcArray = lookForFunctionCalls(editor, fcArray, ast.program.body, tabSize);
