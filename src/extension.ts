@@ -261,13 +261,19 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
 
     paramList = paramList.map(param => {
       // Extract identifiers
-      let identifiers = param.match(/([a-zA-Z0-9]+):?/);
+      let identifiers = param.match(/([\.a-zA-Z0-9]+):?/);
 
       if (identifiers && identifiers.length > 1) {
         return identifiers[1];
       }
       return "";
     }).filter(param => param !== "");
+
+    let possibleSpread = paramList.findIndex(item => item.substr(0, 3) === '...');
+
+    if (possibleSpread !== -1) {
+      paramList[possibleSpread] = paramList[possibleSpread].slice(3);
+    }
 
     // If the functionName is one of the parameters, don't decorate it
     if (paramList.some(param => param === fc.functionName)) return;
@@ -281,9 +287,19 @@ async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCa
     if (defObj.defLine.includes('for (') || defObj.defLine.includes('for (')) return;
 
     if (fc.paramLocations && fc.paramNames) {
-      for (let idx in fc.paramLocations) {
+      for (let ix in fc.paramLocations) {
+        let idx = parseInt(ix);
+
         if (hideIfEqual && fc.paramNames[idx] === paramList[idx]) continue;
-        let decoration = Annotations.paramAnnotation(paramList[idx] + ": ", fc.paramLocations[idx]);
+
+        let decoration;
+
+        if (possibleSpread !== -1 && idx >= possibleSpread) {
+          decoration = Annotations.paramAnnotation(paramList[possibleSpread] + `[${idx-possibleSpread}]: `, fc.paramLocations[idx]);
+        } else {
+          decoration = Annotations.paramAnnotation(paramList[idx] + ": ", fc.paramLocations[idx]);
+        }
+
         decArray.push(decoration);
       }
     }

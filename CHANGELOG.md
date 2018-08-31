@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.0 - Aug 30, 2018
+- [Feature] functions with variadic parameter will be spread across function calls
+
 ## 0.4.2 - Aug 29, 2018
 - [Bug] fixed issue where #! would break parser and cause annotations not to occur.
 
