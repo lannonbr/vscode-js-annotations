@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import Commands from "./commands";
-import { decorateFunctionCall } from "./decorator";
-import { getDefinitions, getFunctionCalls } from "./parser";
+import * as decorator from "./decorator";
+import * as parser from "./parser";
 
 const decType = vscode.window.createTextEditorDecorationType({});
 
@@ -58,10 +58,10 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
   const sourceCode = editor.document.getText();
 
   // get an array of all said function calls in the file
-  let fcArray = getFunctionCalls(sourceCode, editor);
+  let fcArray = parser.getFunctionCalls(sourceCode, editor);
 
   // grab the definitions for any of the function calls which can find a definition
-  fcArray = await getDefinitions(fcArray, editor.document.uri);
+  fcArray = await parser.getDefinitions(fcArray, editor.document.uri);
 
   // cache for documents so they aren't loaded for every single call
   const documentCache: any = {};
@@ -70,7 +70,7 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
   const callsWithDefinitions = fcArray.filter((item) => item.definitionLocation !== undefined);
 
   for (const fc of callsWithDefinitions) {
-    await decorateFunctionCall(editor, documentCache, decArray, fc);
+    await decorator.decorateFunctionCall(editor, documentCache, decArray, fc);
   }
 
   editor.setDecorations(decType, decArray);
