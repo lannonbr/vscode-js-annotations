@@ -129,7 +129,17 @@ function parseParams(args: any, editor: vscode.TextEditor): any {
         new vscode.Position(endArr[0], endArr[1] - offset)
       );
 
-      paramNamesArr.push(arg.value || arg.name);
+      if (arg.type === "MemberExpression") {
+        // Array access and item access (foo.bar, baz[3])
+        paramNamesArr.push(arg.object.name);
+      } else if (arg.value !== undefined) {
+        // Literals (false, 4, "foobar")
+        paramNamesArr.push(arg.value);
+      } else {
+        // variables (isTrue, str)
+        paramNamesArr.push(arg.name);
+      }
+
       paramLocationsArr.push(argRange);
     }
   });

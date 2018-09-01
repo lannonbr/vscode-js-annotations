@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1 - Sep 1, 2018
+- [Bug] Array access params (a[2]) and object property params (foo.bar) were not being annotated.
+
 ## 0.5.0 - Aug 30, 2018
 - [Feature] functions with variadic parameter will be spread across function calls
 
