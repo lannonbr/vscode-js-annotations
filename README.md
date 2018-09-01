@@ -8,4 +8,25 @@
 
 vscode-js-annotations goes through any Javascript or Typescript file and inserts parameter annotations into all function calls so it is easily noticable on what a particular parameter is.
 
-It currently is in a beta state so expect some bugs to appear.
+## Settings
+
+There currently is a few configurable settings in the extension
+
+| Name | Description | Default |
+|-------|------------|---------|
+| `jsannotations.enabled`  | Enable JS Annotations | true |
+| `jsannotations.hideIfEqual` | Hide annotation if argument name matches parameter name | true |
+
+## Themable Colors
+
+JS Annotations provides a single themable color being the color of what the annotation should be:
+
+| Name | Description |
+|------|-------------|
+| `jsannotations.annotationForeground` | Specifies the foreground color for the annotations |
+
+## Contributors 👨‍💻 👩‍💻
+
+Thanks to the following Contributors who have helped with this project
+
+* Flavio Copes ([@flaviocopes](https://github.com/flaviocopes))
