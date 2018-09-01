@@ -1,10 +1,10 @@
-import { Range, Location } from 'vscode';
+import { Location, Range } from "vscode";
 
-export default interface functionCallObject {
+export interface IFunctionCallObject {
     functionName: string;
     lineNumber: number;
     functionRange?: Range;
     paramNames?: string[];
     paramLocations?: Range[];
-    definitionLocation?: Location
+    definitionLocation?: Location;
 }
