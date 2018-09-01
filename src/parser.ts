@@ -131,7 +131,13 @@ function parseParams(args: any, editor: vscode.TextEditor): any {
 
       if (arg.type === "MemberExpression") {
         // Array access and item access (foo.bar, baz[3])
-        paramNamesArr.push(arg.object.name);
+        if (arg.object.name !== undefined) {
+          // Single depth access & array
+          paramNamesArr.push(arg.object.name);
+        } else {
+          // multi-depth access
+          paramNamesArr.push(arg.property.name);
+        }
       } else if (arg.value !== undefined) {
         // Literals (false, 4, "foobar")
         paramNamesArr.push(arg.value);

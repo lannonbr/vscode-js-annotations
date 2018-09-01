@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.2 - Sep 1, 2018
+- [Hotfix] Made the last bug fix work with deeply nested object properties (ex: a.b.c.d)
+
 ## 0.5.1 - Sep 1, 2018
 - [Bug] Array access params (a[2]) and object property params (foo.bar) were not being annotated.
 
