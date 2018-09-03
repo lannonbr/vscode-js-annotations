@@ -34,20 +34,27 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: IFunctionCallO
   let arr = [];
 
   function getNodes(astNode, nodeArr) {
+    // Loop through all keys in the current node
     for (const key in astNode) {
       if (astNode.hasOwnProperty(key)) {
         const item = astNode[key];
 
-        if (item !== undefined && item !== null && typeof item !== "string" && typeof item !== "function" && item.length !== undefined) {
+        if (item === undefined || item === null) {
+          continue;
+        }
+
+        if (Array.isArray(item)) {
+          // If the current node is an array of nodes, loop through each
           item.forEach((subItem) => nodeArr = getNodes(subItem, nodeArr));
-        } else if (item !== undefined && item !== null && item.loc !== undefined) {
+        } else if (item.loc !== undefined) {
+          // If is a proper node and has a location in the source, push it into the array and recurse on that for nodes inside this node
           nodeArr.push(item);
           nodeArr = getNodes(item, nodeArr);
         }
       }
     }
 
-    return arr;
+    return nodeArr;
   }
 
   arr = getNodes(body, arr);
