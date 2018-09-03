@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.1 - Sep 3, 2018
+- [Hotfix] Made nested new object expressions annotated
+
 ## 0.6.0 - Sep 3, 2018
 - [Feature] new object expressions now annotated
 
