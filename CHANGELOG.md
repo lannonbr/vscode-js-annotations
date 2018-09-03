@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.0 - Sep 3, 2018
+- [Feature] new object expressions now annotated
+
 ## 0.5.2 - Sep 1, 2018
 - [Hotfix] Made the last bug fix work with deeply nested object properties (ex: a.b.c.d)
 

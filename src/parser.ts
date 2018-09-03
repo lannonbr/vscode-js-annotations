@@ -59,7 +59,7 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: IFunctionCallO
 
   arr = getNodes(body, arr);
 
-  const calls = arr.filter((node) => node.type === "CallExpression");
+  const calls = arr.filter((node) => node.type === "CallExpression" || node.type === "NewExpression");
 
   for (const call of calls) {
     if (call.callee && call.callee.loc) {
