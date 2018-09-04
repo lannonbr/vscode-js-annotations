@@ -14,4 +14,18 @@ export class Annotations {
       } as DecorationInstanceRenderOptions
     } as DecorationOptions;
   }
+
+  public static errorParamAnnotation(range: Range): DecorationOptions {
+
+    return {
+      range,
+      renderOptions: {
+        before: {
+          color: "red",
+          contentText: "❗️ Invalid parameter: ",
+          fontWeight: "800"
+        }
+      } as DecorationInstanceRenderOptions
+    } as DecorationOptions;
+  }
 }

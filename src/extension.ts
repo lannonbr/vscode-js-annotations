@@ -4,6 +4,9 @@ import * as decorator from "./decorator";
 import * as parser from "./parser";
 
 const decType = vscode.window.createTextEditorDecorationType({});
+const errDecType = vscode.window.createTextEditorDecorationType({
+  fontWeight: "800"
+});
 
 export function activate(context: vscode.ExtensionContext) {
   console.log("extension is now active!");
@@ -53,6 +56,7 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
   }
 
   const decArray: vscode.DecorationOptions[] = [];
+  const errDecArray: vscode.DecorationOptions[] = [];
 
   // Get all of the text in said editor
   const sourceCode = editor.document.getText();
@@ -70,8 +74,9 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
   const callsWithDefinitions = fcArray.filter((item) => item.definitionLocation !== undefined);
 
   for (const fc of callsWithDefinitions) {
-    await decorator.decorateFunctionCall(editor, documentCache, decArray, fc);
+    await decorator.decorateFunctionCall(editor, documentCache, decArray, errDecArray, fc);
   }
 
   editor.setDecorations(decType, decArray);
+  editor.setDecorations(errDecType, errDecArray);
 }

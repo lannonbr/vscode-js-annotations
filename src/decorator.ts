@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { Annotations } from "./annotationProvider";
 import { IFunctionCallObject } from "./functionCallObject";
 
-export async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCache: any, decArray: vscode.DecorationOptions[], fc: IFunctionCallObject): Promise<void> {
+export async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCache: any, decArray, errDecArray: vscode.DecorationOptions[], fc: IFunctionCallObject): Promise<void> {
   // Check for existence of functionCallObject and a defintion location
   if (fc === undefined || fc.definitionLocation === undefined) {
     return;
@@ -48,6 +48,11 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
           if (restParamIdx !== -1 && idx >= restParamIdx) {
             decoration = Annotations.paramAnnotation(paramList[restParamIdx] + `[${idx - restParamIdx}]: `, currentArgRange);
           } else {
+            if (idx >= paramList.length) {
+              const errorDecoration = Annotations.errorParamAnnotation(currentArgRange);
+              errDecArray.push(errorDecoration);
+              continue;
+            }
             decoration = Annotations.paramAnnotation(paramList[idx] + ": ", currentArgRange);
           }
 
