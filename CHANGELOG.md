@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 - Sep 4, 2018
+- [Feature] Added config options for annotation font-weight and font-style
+- [Bug] Fixed issue where arguments that weren't supposed to be there were being annotated with undefined
+
 ## 0.6.1 - Sep 3, 2018
 - [Hotfix] Made nested new object expressions annotated
 

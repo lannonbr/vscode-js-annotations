@@ -1,4 +1,4 @@
-import { DecorationInstanceRenderOptions, DecorationOptions, Range, ThemeColor } from "vscode";
+import { DecorationInstanceRenderOptions, DecorationOptions, Range, ThemeColor, workspace } from "vscode";
 
 export class Annotations {
   public static paramAnnotation(message: string, range: Range): DecorationOptions {
@@ -9,7 +9,8 @@ export class Annotations {
         before: {
           color: new ThemeColor("jsannotations.annotationForeground"),
           contentText: message,
-          fontStyle: "italic"
+          fontStyle: workspace.getConfiguration("jsannotations").get("fontStyle"),
+          fontWeight: workspace.getConfiguration("jsannotations").get("fontWeight"),
         }
       } as DecorationInstanceRenderOptions
     } as DecorationOptions;

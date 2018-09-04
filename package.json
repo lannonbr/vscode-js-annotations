@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotations for parameters in your JS / TS Files to mimic named parameters",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -44,6 +44,31 @@
             "type": "boolean",
             "description": "Hide annotation if argument name matches parameter name",
             "default": true
+          },
+          "jsannotations.fontWeight": {
+            "type": "string",
+            "default": "400",
+            "enum": [
+              "100",
+              "200",
+              "300",
+              "400",
+              "500",
+              "600",
+              "700",
+              "800",
+              "900"
+            ],
+            "description": "Annotation styling of font-weight CSS property"
+          },
+          "jsannotations.fontStyle": {
+            "type": "string",
+            "default": "italic",
+            "enum": [
+              "normal",
+              "italic"
+            ],
+            "description": "Annotation styling of font-style CSS property"
           }
         }
       }
