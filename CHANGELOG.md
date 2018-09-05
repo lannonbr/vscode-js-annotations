@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.1 - Sep 4, 2018
+- [Bug] Typescript functions with access modifiers were returning the modifiers instead of param names
+
 ## 0.7.0 - Sep 4, 2018
 - [Feature] Added config options for annotation font-weight and font-style
 - [Bug] Fixed issue where arguments that weren't supposed to be there were being annotated with undefined
