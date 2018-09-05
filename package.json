@@ -20,8 +20,7 @@
     "url": "https://github.com/lannonbr/vscode-js-annotations/issues"
   },
   "activationEvents": [
-    "onLanguage:javascript",
-    "onLanguage:typescript"
+    "*"
   ],
   "main": "./out/extension",
   "contributes": {

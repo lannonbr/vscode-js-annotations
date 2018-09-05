@@ -55,11 +55,18 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
     return;
   }
 
-  const decArray: vscode.DecorationOptions[] = [];
-  const errDecArray: vscode.DecorationOptions[] = [];
-
   // Get all of the text in said editor
   const sourceCode = editor.document.getText();
+
+  const [decArray, errDecArray] = await createDecorations(editor, sourceCode);
+
+  editor.setDecorations(decType, decArray);
+  editor.setDecorations(errDecType, errDecArray);
+}
+
+export async function createDecorations(editor: vscode.TextEditor, sourceCode: string): Promise<vscode.DecorationOptions[][]> {
+  const decArray: vscode.DecorationOptions[] = [];
+  const errDecArray: vscode.DecorationOptions[] = [];
 
   // get an array of all said function calls in the file
   let fcArray = parser.getFunctionCalls(sourceCode, editor);
@@ -77,6 +84,5 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
     await decorator.decorateFunctionCall(editor, documentCache, decArray, errDecArray, fc);
   }
 
-  editor.setDecorations(decType, decArray);
-  editor.setDecorations(errDecType, errDecArray);
+  return [decArray, errDecArray];
 }
