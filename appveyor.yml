@@ -1,0 +1,9 @@
+install:
+  - ps: Install-Product node 8
+  - npm install
+  - npm run vscode:prepublish
+test_script:
+  - node --version
+  - npm --version
+  - npm run lint
+  - npm test --silent
