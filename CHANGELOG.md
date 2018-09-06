@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.2 - Sep 6, 2018
+- [Bug] Param capturing did not fully capture definition parameter list. Switched off of a regex to properly capture string
+
 ## 0.7.1 - Sep 4, 2018
 - [Bug] Typescript functions with access modifiers were returning the modifiers instead of param names
 

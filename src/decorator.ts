@@ -84,17 +84,15 @@ async function loadDefinitionDocument(fc: IFunctionCallObject, documentCache: an
 function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: string): string[] {
   let paramList: string[] = [];
 
-  // regex to search for function call arguments. Regex found at https://stackoverflow.com/a/13952890
-  const paramRegex = /\( *([^)]+?) *\)/;
+  // Grab any params inside the definition line
+  const defintionParam = grabDefLineParams(definitionLine);
 
-  const definitionParamRegexMatches = definitionLine.match(paramRegex);
-
-  if (definitionParamRegexMatches) {
+  if (defintionParam !== "") {
     if (fc.functionRange === undefined) {
       return;
     }
 
-    paramList = definitionParamRegexMatches[1].split(/\s*,\s*/);
+    paramList = defintionParam.split(/\s*,\s*/);
 
     paramList = paramList.map((param) => {
       // Extract identifiers
@@ -117,6 +115,39 @@ function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: string)
   }
 
   return paramList;
+}
+
+function grabDefLineParams(definitionLine: string): string {
+  let startIdx;
+  let endIdx;
+
+  startIdx = definitionLine.indexOf("(");
+
+  if (startIdx === -1) {
+    return "";
+  } else {
+    startIdx++;
+  }
+
+  let depth = 1;
+
+  for (let i = startIdx; i < definitionLine.length; i++) {
+    if (definitionLine[i] === "(") {
+      depth++;
+    } else if (definitionLine[i] === ")") {
+      depth--;
+      if (depth === 0) {
+        endIdx = i;
+        break;
+      }
+    }
+  }
+
+  if (endIdx === undefined) {
+    return "";
+  }
+
+  return definitionLine.substring(startIdx, endIdx);
 }
 
 function shouldntBeDecorated(paramList: string[], functionCall: IFunctionCallObject, functionCallLine: string, definitionLine: string): boolean {
