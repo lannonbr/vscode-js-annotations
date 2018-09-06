@@ -3,6 +3,7 @@
 [![](https://vsmarketplacebadge.apphb.com/version-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
 [![](https://vsmarketplacebadge.apphb.com/installs-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
 [![](https://vsmarketplacebadge.apphb.com/rating-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
+[![](https://travis-ci.org/lannonbr/vscode-js-annotations.svg?branch=master)](https://travis-ci.org/lannonbr/vscode-js-annotations)
 
 ![jsannotations screenshot](jsannotations.png)
 
