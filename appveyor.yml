@@ -1,5 +1,8 @@
+environment:
+  matrix:
+    - nodejs_version: "8"
 install:
-  - ps: Install-Product node 8
+  - ps: Install-Product node $env:nodejs_version
   - npm install
   - npm run vscode:prepublish
 test_script:
@@ -7,3 +10,4 @@ test_script:
   - npm --version
   - npm run lint
   - npm test --silent
+build: off
