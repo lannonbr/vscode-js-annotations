@@ -4,6 +4,7 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version
   - npm install
+  - npm install -g tslint
   - npm run vscode:prepublish
 test_script:
   - node --version
