@@ -97,7 +97,7 @@ function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: string)
     paramList = paramList.map((param) => {
       // Extract identifiers
 
-      const words = param.split(" ");
+      const words = param.trim().split(" ");
 
       // If there are multiple words and the first word doesn't end with a colon, use the 2nd word as the param
       // this will make sure the param name is used and not the access modifier in TS functions

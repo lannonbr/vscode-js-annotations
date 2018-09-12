@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.7.3 - Sep 12, 2018
+- [Bug] Definitions with extra spaces caused incorrect annotations
+
 ## 0.7.2 - Sep 6, 2018
 - [Bug] Param capturing did not fully capture definition parameter list. Switched off of a regex to properly capture string
 
