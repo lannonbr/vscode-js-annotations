@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.1 - Sep 13, 2018
+- [Hotfix] Added settings to hide either of the diagnostics or error annotations
+
 ## 0.8.0 - Sep 13, 2018
 - [Feature] Invalid parameters in JS will now appear in the Problems panel
 

@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotations for parameters in your JS / TS Files to mimic named parameters",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -38,6 +38,16 @@
             "type": "boolean",
             "description": "Enable JS Annotations",
             "default": true
+          },
+          "jsannotations.hideInvalidAnnotation": {
+            "type": "boolean",
+            "description": "Hide annotations for invalid params",
+            "default": true
+          },
+          "jsannotations.hideDiagnostics": {
+            "type": "boolean",
+            "description": "Hide red squiggles under invalid parameters",
+            "default": false
           },
           "jsannotations.hideIfEqual": {
             "type": "boolean",

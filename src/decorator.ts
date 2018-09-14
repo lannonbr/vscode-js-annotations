@@ -49,15 +49,16 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
             decoration = Annotations.paramAnnotation(paramList[restParamIdx] + `[${idx - restParamIdx}]: `, currentArgRange);
           } else {
             if (idx >= paramList.length) {
-              const errorDecoration = Annotations.errorParamAnnotation(currentArgRange);
-
-              if (currentEditor.document.languageId === "javascript") {
-
+              if (currentEditor.document.languageId === "javascript" && vscode.workspace.getConfiguration("jsannotations").get("hideDiagnostics") === false) {
                 const diag = new vscode.Diagnostic(currentArgRange, "[JS Param Annotations] Invalid parameter", vscode.DiagnosticSeverity.Error);
                 diagnostics.push(diag);
               }
 
-              errDecArray.push(errorDecoration);
+              if (vscode.workspace.getConfiguration("jsannotations").get("hideInvalidAnnotation") === false) {
+                const errorDecoration = Annotations.errorParamAnnotation(currentArgRange);
+                errDecArray.push(errorDecoration);
+              }
+
               continue;
             }
             decoration = Annotations.paramAnnotation(paramList[idx] + ": ", currentArgRange);
