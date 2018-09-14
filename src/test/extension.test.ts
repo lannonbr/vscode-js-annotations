@@ -40,7 +40,10 @@ suite("js annotations", () => {
     const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
 
     assert.deepEqual(decArray.length, 1);
-    assert.deepEqual(errDecArray.length, 1);
+
+    // By Default the error decoration is hidden with the diagnostic in it's place
+    // TODO: Check for diagnostic
+    assert.deepEqual(errDecArray.length, 0);
 
     vscode.commands.executeCommand("workbench.action.closeActiveEditor");
   });

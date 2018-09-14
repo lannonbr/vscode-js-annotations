@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.2 - Sep 14, 2018
+- [Hotfix] Duplicate diagnostics were showing up in problems panel. Fixed this in this patch.
+
 ## 0.8.1 - Sep 13, 2018
 - [Hotfix] Added settings to hide either of the diagnostics or error annotations
 

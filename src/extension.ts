@@ -52,9 +52,8 @@ async function run(ctx: vscode.ExtensionContext, editor: vscode.TextEditor | und
   }
 
   // Setup variables for diagnostics when loading JS file
-  if (editor.document.languageId === "javascript") {
+  if (diagCollection === undefined && editor.document.languageId === "javascript") {
     diagCollection = vscode.languages.createDiagnosticCollection("js-annot");
-    diagnostics = [];
   }
 
   const isEnabled = vscode.workspace.getConfiguration("jsannotations").get("enabled");
