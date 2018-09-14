@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.8.0 - Sep 13, 2018
+- [Feature] Invalid parameters in JS will now appear in the Problems panel
+
 ## 0.7.3 - Sep 12, 2018
 - [Bug] Definitions with extra spaces caused incorrect annotations
 

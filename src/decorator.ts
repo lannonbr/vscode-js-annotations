@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { Annotations } from "./annotationProvider";
 import { IFunctionCallObject } from "./functionCallObject";
 
-export async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCache: any, decArray, errDecArray: vscode.DecorationOptions[], fc: IFunctionCallObject): Promise<void> {
+export async function decorateFunctionCall(currentEditor: vscode.TextEditor, documentCache: any, decArray, errDecArray: vscode.DecorationOptions[], fc: IFunctionCallObject, diagnostics: vscode.Diagnostic[]): Promise<void> {
   // Check for existence of functionCallObject and a defintion location
   if (fc === undefined || fc.definitionLocation === undefined) {
     return;
@@ -50,6 +50,13 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
           } else {
             if (idx >= paramList.length) {
               const errorDecoration = Annotations.errorParamAnnotation(currentArgRange);
+
+              if (currentEditor.document.languageId === "javascript") {
+
+                const diag = new vscode.Diagnostic(currentArgRange, "[JS Param Annotations] Invalid parameter", vscode.DiagnosticSeverity.Error);
+                diagnostics.push(diag);
+              }
+
               errDecArray.push(errorDecoration);
               continue;
             }

@@ -8,25 +8,28 @@ const errDecType = vscode.window.createTextEditorDecorationType({
   fontWeight: "800"
 });
 
-export function activate(context: vscode.ExtensionContext) {
+let diagCollection;
+let diagnostics: vscode.Diagnostic[];
+
+export function activate(ctx: vscode.ExtensionContext) {
   console.log("extension is now active!");
 
   // Update when a file opens
   vscode.window.onDidChangeActiveTextEditor((editor) => {
-    run(editor);
+    run(ctx, editor);
   });
 
   // Update when a file saves
   vscode.workspace.onWillSaveTextDocument((event) => {
     const openEditor = vscode.window.visibleTextEditors.filter((editor) => editor.document.uri === event.document.uri)[0];
 
-    run(openEditor);
+    run(ctx, openEditor);
   });
 
   // Update if the config was changed
   vscode.workspace.onDidChangeConfiguration((event) => {
     if (event.affectsConfiguration("jsannotations")) {
-      run(vscode.window.activeTextEditor);
+      run(ctx, vscode.window.activeTextEditor);
     }
   });
 
@@ -37,7 +40,7 @@ export function deactivate() {
   console.log("DONE");
 }
 
-async function run(editor: vscode.TextEditor | undefined): Promise<void> {
+async function run(ctx: vscode.ExtensionContext, editor: vscode.TextEditor | undefined): Promise<void> {
   if (!editor) {
     return;
   }
@@ -46,6 +49,12 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
 
   if (supportedLanguages.indexOf(editor.document.languageId) === -1) {
     return;
+  }
+
+  // Setup variables for diagnostics when loading JS file
+  if (editor.document.languageId === "javascript") {
+    diagCollection = vscode.languages.createDiagnosticCollection("js-annot");
+    diagnostics = [];
   }
 
   const isEnabled = vscode.workspace.getConfiguration("jsannotations").get("enabled");
@@ -58,7 +67,14 @@ async function run(editor: vscode.TextEditor | undefined): Promise<void> {
   // Get all of the text in said editor
   const sourceCode = editor.document.getText();
 
+  diagnostics = [];
+
   const [decArray, errDecArray] = await createDecorations(editor, sourceCode);
+
+  if (editor.document.languageId === "javascript") {
+    diagCollection.set(editor.document.uri, diagnostics);
+    ctx.subscriptions.push(diagCollection);
+  }
 
   editor.setDecorations(decType, decArray);
   editor.setDecorations(errDecType, errDecArray);
@@ -81,7 +97,7 @@ export async function createDecorations(editor: vscode.TextEditor, sourceCode: s
   const callsWithDefinitions = fcArray.filter((item) => item.definitionLocation !== undefined);
 
   for (const fc of callsWithDefinitions) {
-    await decorator.decorateFunctionCall(editor, documentCache, decArray, errDecArray, fc);
+    await decorator.decorateFunctionCall(editor, documentCache, decArray, errDecArray, fc, diagnostics);
   }
 
   return [decArray, errDecArray];
