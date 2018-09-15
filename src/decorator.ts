@@ -102,6 +102,8 @@ function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: string)
 
     paramList = defintionParam.split(/\s*,\s*/);
 
+    paramList = squishGenerics(paramList);
+
     paramList = paramList.map((param) => {
       // Extract identifiers
 
@@ -123,6 +125,42 @@ function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: string)
   }
 
   return paramList;
+}
+
+// This function will cycle through all of the current strings split by a comma, and combine strings that were of generic types and split incorrectly
+function squishGenerics(paramList: string[]): string[] {
+  const newParamList = [];
+
+  let currentStr = "";
+  let numToGet = 1; // Always grab 1 string at the beginning
+
+  for (const item of paramList) {
+     currentStr += item;
+     numToGet--;
+
+     // If numToGet is zero, check the difference between '<' and '>' characters
+     if (numToGet === 0) {
+       const numOfLeftBrackets = currentStr.split("<").length - 1;
+       const numOfRightBrackets = currentStr.split(">").length - 1;
+       const numOfEqualSigns = currentStr.split("=").length - 1;
+
+       // Diff is |num of left brackets ('<') minus the num of solo right brackets (which is the number of '>' minus the num of '=' signs)|
+       const diff = Math.abs(numOfLeftBrackets - (numOfRightBrackets - numOfEqualSigns));
+
+       if ((numOfEqualSigns > 0) || diff === 0) {
+        // If the difference is zero, we have a full param, push it to the new params, and start over at the next string
+        // Also, do this if there is equal signs in the params which exist with arrow functions.
+         newParamList.push(currentStr);
+         currentStr = "";
+         numToGet = 1;
+       } else {
+         // Otherwise, set the number of strings to grab to the diff
+         numToGet = diff;
+       }
+     }
+  }
+
+  return newParamList;
 }
 
 function grabDefLineParams(definitionLine: string): string {
