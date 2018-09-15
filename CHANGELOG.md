@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3 - Sep 14, 2018
+- [Bug] Importing functions with require don't cause issues with annotations anymore.
+- [Bug] TS functions with Generic types now properly annotate
+
 ## 0.8.2 - Sep 14, 2018
 - [Hotfix] Duplicate diagnostics were showing up in problems panel. Fixed this in this patch.
 

@@ -11,7 +11,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
   // config option to hide annotations if param and arg names match
   const hideIfEqual = vscode.workspace.getConfiguration("jsannotations").get("hideIfEqual");
 
-  const document = await loadDefinitionDocument(fc, documentCache);
+  const document = await loadDefinitionDocument(fc.definitionLocation.uri, documentCache);
   const definitionLine = document.lineAt(fc.definitionLocation.range.start.line).text;
 
   const paramList = grabPossibleParameters(fc, definitionLine);
@@ -71,16 +71,16 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
   }
 }
 
-async function loadDefinitionDocument(fc: IFunctionCallObject, documentCache: any) {
+async function loadDefinitionDocument(uri: vscode.Uri, documentCache: any) {
   let document: vscode.TextDocument;
 
   // Currently index documentCache by the filename (TODO: Figure out better index later)
-  const pathNameArr = fc.definitionLocation.uri.fsPath.split("/");
+  const pathNameArr = uri.fsPath.split("/");
   const pathName = pathNameArr[pathNameArr.length - 1];
 
   // If the document is not present in the cache, load it from the filesystem, otherwise grab from the cache
   if (documentCache[pathName] === undefined) {
-    document = await vscode.workspace.openTextDocument(fc.definitionLocation.uri);
+    document = await vscode.workspace.openTextDocument(uri);
     documentCache[pathName] = document;
   } else {
     document = documentCache[pathName];

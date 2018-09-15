@@ -180,9 +180,38 @@ export async function getDefinitions(fcArray: IFunctionCallObject[], uri: vscode
       // grab an array of locations for the definitions of a function call
       const locations = await vscode.commands.executeCommand<vscode.Location[]>("vscode.executeDefinitionProvider", uri, fc.functionRange.start);
 
-      // If it exists, set the definitionLocation to the first result
       if (locations !== undefined && locations.length > 0) {
-        fc.definitionLocation = locations[0];
+        // If one location, only return if it has some function definition of some sort
+        if (locations.length === 1) {
+          const document = await vscode.workspace.openTextDocument(locations[0].uri);
+          const line = document.lineAt(locations[0].range.start).text;
+
+          if (line.includes("constructor")) {
+            fc.definitionLocation = locations[0];
+            continue;
+          }
+
+          if (line.includes("function ") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
+            fc.definitionLocation = locations[0];
+          }
+          continue;
+        }
+
+        // Otherwise, look through each location and find one with a function definition
+        for (const location of locations) {
+          const document = await vscode.workspace.openTextDocument(location.uri);
+          const line = document.lineAt(location.range.start).text;
+
+          if (line.includes("constructor")) {
+            fc.definitionLocation = locations[0];
+            break;
+          }
+
+          if (line.includes("function ") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
+            fc.definitionLocation = location;
+            break;
+          }
+        }
       }
     }
 
