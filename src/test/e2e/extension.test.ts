@@ -1,9 +1,9 @@
 import * as assert from "assert";
 import * as path from "path";
 import * as vscode from "vscode";
-import * as Extension from "../extension";
+import * as Extension from "../../extension";
 
-const testFolderLocation = "/../../src/test/examples/";
+const testFolderLocation = "/../../../src/test/examples/";
 
 suite("js annotations", () => {
   test("should annotate function with parameters", async () => {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.4 - Sep 15, 2018
+- [Bug] Continued working on cleaning up parameter splitting algorithm. Now doesn't break with functions
+- [Feature] Wrote unit tests for splitToParamList function
+
 ## 0.8.3 - Sep 14, 2018
 - [Bug] Importing functions with require don't cause issues with annotations anymore.
 - [Bug] TS functions with Generic types now properly annotate
