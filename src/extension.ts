@@ -10,6 +10,7 @@ const errDecType = vscode.window.createTextEditorDecorationType({
 
 let diagCollection;
 let diagnostics: vscode.Diagnostic[];
+let timeoutId;
 
 export function activate(ctx: vscode.ExtensionContext) {
   console.log("extension is now active!");
@@ -24,6 +25,17 @@ export function activate(ctx: vscode.ExtensionContext) {
     const openEditor = vscode.window.visibleTextEditors.filter((editor) => editor.document.uri === event.document.uri)[0];
 
     run(ctx, openEditor);
+  });
+
+  vscode.workspace.onDidChangeTextDocument((event) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      const openEditor = vscode.window.visibleTextEditors.filter((editor) => editor.document.uri === event.document.uri)[0];
+      run(ctx, openEditor);
+    }, 100);
   });
 
   // Update if the config was changed
