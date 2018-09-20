@@ -7,11 +7,7 @@ const testFolderLocation = "/../../../src/test/examples/";
 
 suite("js annotations", () => {
   test("should annotate function with parameters", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "normalParams.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("normalParams.js");
 
     assert.deepEqual(decArray.length, 1);
     assert.deepEqual(errDecArray.length, 0);
@@ -20,11 +16,7 @@ suite("js annotations", () => {
   });
 
   test("should not annotate function with no parameters", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "noParams.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("noParams.js");
 
     assert.deepEqual(decArray.length, 0);
     assert.deepEqual(errDecArray.length, 0);
@@ -33,27 +25,17 @@ suite("js annotations", () => {
   });
 
   test("should decorate with error decoration if more args than params", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "moreArgs.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("moreArgs.js");
 
     assert.deepEqual(decArray.length, 1);
-
-    // By Default the error decoration is hidden with the diagnostic in it's place
-    // TODO: Check for diagnostic
     assert.deepEqual(errDecArray.length, 0);
+    assert.deepEqual(Extension.getDiagnostics().length, 1);
 
     vscode.commands.executeCommand("workbench.action.closeActiveEditor");
   });
 
   test("should decorate with rest params", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "rest.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("rest.js");
 
     assert.deepEqual(decArray.length, 3);
     assert.deepEqual(errDecArray.length, 0);
@@ -62,11 +44,7 @@ suite("js annotations", () => {
   });
 
   test("should decorate function call with multiple lines", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "multipleLines.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("multipleLines.js");
 
     assert.deepEqual(decArray.length, 2);
     assert.deepEqual(errDecArray.length, 0);
@@ -75,11 +53,7 @@ suite("js annotations", () => {
   });
 
   test("should decorate with nested function calls", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "nested.ts"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("nested.ts");
 
     assert.deepEqual(decArray.length, 6);
     assert.deepEqual(errDecArray.length, 0);
@@ -88,11 +62,7 @@ suite("js annotations", () => {
   });
 
   test("should not annotate with call that has no definition", async () => {
-    const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + "noDefinition.js"));
-    const document = await vscode.workspace.openTextDocument(uri);
-    const editor = await vscode.window.showTextDocument(document);
-    await sleep(500);
-    const [decArray, errDecArray] = await Extension.createDecorations(editor, editor.document.getText());
+    const [decArray, errDecArray] = await getDecorationsFromExample("noDefinition.js");
 
     assert.deepEqual(decArray.length, 0);
     assert.deepEqual(errDecArray.length, 0);
@@ -105,4 +75,14 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+}
+
+async function getDecorationsFromExample(exampleName: string): Promise<vscode.DecorationOptions[][]> {
+  const uri = vscode.Uri.file(path.join(__dirname + testFolderLocation + exampleName));
+  const document = await vscode.workspace.openTextDocument(uri);
+  const editor = await vscode.window.showTextDocument(document);
+  await sleep(500);
+  const decorations = await Extension.createDecorations(editor, editor.document.getText());
+
+  return decorations;
 }

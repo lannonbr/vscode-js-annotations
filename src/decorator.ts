@@ -54,6 +54,11 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
             if (idx >= paramList.length) {
               if (currentEditor.document.languageId === "javascript" && willShowDiagnostics) {
                 const diag = new vscode.Diagnostic(currentArgRange, "[JS Param Annotations] Invalid parameter", vscode.DiagnosticSeverity.Error);
+
+                if (!diagnostics) {
+                  console.log(arguments);
+                }
+
                 diagnostics.push(diag);
               }
 
