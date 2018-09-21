@@ -14,6 +14,9 @@ export function grabPossibleParameters(fc: IFunctionCallObject, definitionLine: 
     paramList = splitToParamList(defintionParam);
 
     paramList = paramList.map((param) => {
+
+      param = param.replace(/\.\.\.\s+/, "...");
+
       // Extract identifiers
       const words = param.trim().split(" ");
 
