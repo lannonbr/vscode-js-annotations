@@ -59,7 +59,10 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
                   console.log(arguments);
                 }
 
-                diagnostics.push(diag);
+                // If the diagnostic does not exist in the array yet, push it
+                if (!diagnostics.some((diagnostic) => JSON.stringify(diagnostic) === JSON.stringify(diag))) {
+                  diagnostics.push(diag);
+                }
               }
 
               if (willShowErrorAnnotation) {
