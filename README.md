@@ -36,6 +36,7 @@ JS Annotations provides a single themable color being the color of what the anno
 Thanks to the following Contributors who have helped with this project in any way
 
 * Flavio Copes ([@flaviocopes](https://github.com/flaviocopes)) (PRs)
+* Guilherme Amorim ([@GuiAmPm](https://github.com/GuiAmPm)) (PRs)
 * Nigel Scott ([@Gruntfuggly](https://github.com/Gruntfuggly)) (Issues)
 * Nurbol Alpysbayev ([@anurbol](https://github.com/anurbol)) (Issues)
 * Sioxas ([@sioxas](https://github.com/Sioxas)) (Issues)
