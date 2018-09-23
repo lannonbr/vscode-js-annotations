@@ -66,8 +66,6 @@ async function run(ctx: vscode.ExtensionContext, editor: vscode.TextEditor | und
   // Get all of the text in said editor
   const sourceCode = editor.document.getText();
 
-  diagnostics = [];
-
   const [decArray, errDecArray] = await createDecorations(editor, sourceCode);
 
   if (editor.document.languageId === "javascript") {
@@ -80,6 +78,8 @@ async function run(ctx: vscode.ExtensionContext, editor: vscode.TextEditor | und
 }
 
 export async function createDecorations(editor: vscode.TextEditor, sourceCode: string): Promise<vscode.DecorationOptions[][]> {
+  diagnostics = [];
+
   const decArray: vscode.DecorationOptions[] = [];
   const errDecArray: vscode.DecorationOptions[] = [];
 
@@ -100,4 +100,13 @@ export async function createDecorations(editor: vscode.TextEditor, sourceCode: s
   }
 
   return [decArray, errDecArray];
+}
+
+export function getDiagnostics(): vscode.Diagnostic[] {
+  if (!diagnostics) {
+    return [];
+  }
+
+  // Returns a copy
+  return diagnostics.slice();
 }
