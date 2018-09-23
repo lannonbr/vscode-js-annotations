@@ -1,9 +1,10 @@
 # JS / TS Parameter Annotations for Visual Studio Code
 
-[![](https://vsmarketplacebadge.apphb.com/version-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
-[![](https://vsmarketplacebadge.apphb.com/installs-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
-[![](https://vsmarketplacebadge.apphb.com/rating-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
-[![](https://travis-ci.org/lannonbr/vscode-js-annotations.svg?branch=master)](https://travis-ci.org/lannonbr/vscode-js-annotations)
+[![VS Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
+[![VS Marketplace Installs](https://vsmarketplacebadge.apphb.com/installs-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
+[![VS Marketplace Rating](https://vsmarketplacebadge.apphb.com/rating-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
+[![TravisCI Build Status](https://travis-ci.org/lannonbr/vscode-js-annotations.svg?branch=master)](https://travis-ci.org/lannonbr/vscode-js-annotations)
+[![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/xdqr6dl8ofk27sdi?svg=true)](https://ci.appveyor.com/project/lannonbr/vscode-js-annotations)
 
 ![jsannotations screenshot](jsannotations.png)
 
