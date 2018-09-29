@@ -8,9 +8,15 @@ If you want to work on something, look in the Issues tab first. Both a benefit t
 
 If you want to make something and there isn't an issue on it, post one and I will likely look at it within 24 hours max.
 
-## Style
+## Unit Tests
 
-This project uses TSLint so make sure your code doesn't return any errors with such. I highly recommend the [TSLint VS Code Extension](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) to see visible warnings / errors if the code style is incorrect.
+We use the VS Code testrunner for E2E tests which uses Mocha behind the scenes. To run all of the tests, open the Debug tag in VS Code and switch to the `Extension Tests` launch option.
+
+![Launch Tests](runTests.png)
+
+## Linting
+
+This project uses TSLint for linting. To keep consistency for code style, I have integrated it so builds will fail if TSLint doesn't pass. I highly recommend the [TSLint VS Code Extension](https://marketplace.visualstudio.com/items?itemName=eg2.tslint) to see visible warnings / errors in the editor itself if the code style is incorrect.
 
 ## Submitting PRs
 
