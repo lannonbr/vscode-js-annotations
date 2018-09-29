@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.0 - Sep 29, 2018
+- [Feature] Annotations will now be added / remove in real time without needing to save.
+- [Hotfix] Fixed CI breaking
+- [Hotfix] Rest params with a space between the ... operator and the param name now annotated
+
 ## 0.8.4 - Sep 15, 2018
 - [Bug] Continued working on cleaning up parameter splitting algorithm. Now doesn't break with functions
 - [Feature] Wrote unit tests for splitToParamList function
