@@ -25,7 +25,7 @@ There currently is a few configurable settings in the extension
 
 ## Themable Colors
 
-JS Annotations provides a single themable color being the color of what the annotation should be:
+JS Annotations provides a single themable color being the color of what the annotation should be. It can be added to the `workbench.colorCustomizations` property in user settings.
 
 | Name | Description |
 |------|-------------|
