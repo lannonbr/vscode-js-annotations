@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.9.1 - Oct 16, 2018
+- [Bug] TS casted params were incorrectly annotated by one column.
+
 ## 0.9.0 - Sep 29, 2018
 - [Feature] Annotations will now be added / remove in real time without needing to save.
 - [Hotfix] Fixed CI breaking

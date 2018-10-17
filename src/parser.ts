@@ -131,6 +131,11 @@ function parseParams(args: any, editor: vscode.TextEditor): any {
       const startArr = [start.line - 1, start.column];
       const endArr = [end.line - 1, end.column];
 
+      // TSTypeAssertions are off by one for some reason so subtract the column by one.
+      if (arg.type === "TSTypeAssertion") {
+        startArr[1] -= 1;
+      }
+
       const line = editor.document.lineAt(startArr[0]);
 
       let offset;
