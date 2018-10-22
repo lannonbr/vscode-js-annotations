@@ -72,7 +72,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
               continue;
             }
-            decoration = Annotations.paramAnnotation(paramList[idx] + ": ", currentArgRange);
+            decoration = Annotations.paramAnnotation(" " + paramList[idx] + ": ", currentArgRange);
           }
 
           decArray.push(decoration);
