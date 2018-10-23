@@ -35,6 +35,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
     }
 
     if (fc.paramLocations && fc.paramNames) {
+      let counter = 0;
       for (const ix in fc.paramLocations) {
         if (fc.paramLocations.hasOwnProperty(ix)) {
           const idx = parseInt(ix, 10);
@@ -72,9 +73,10 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
               continue;
             }
-            decoration = Annotations.paramAnnotation(" " + paramList[idx] + ": ", currentArgRange);
+            let spacer = (counter === 0) ? " " : "";
+            decoration = Annotations.paramAnnotation(spacer + paramList[idx] + ": ", currentArgRange);
           }
-
+          counter++;
           decArray.push(decoration);
         }
       }
