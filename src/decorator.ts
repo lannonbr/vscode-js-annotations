@@ -73,7 +73,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
               continue;
             }
-            let spacer = (counter === 0) ? " " : "";
+            const spacer = (counter === 0) ? " " : "";
             decoration = Annotations.paramAnnotation(spacer + paramList[idx] + ": ", currentArgRange);
           }
           counter++;
