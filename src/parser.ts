@@ -196,7 +196,7 @@ export async function getDefinitions(fcArray: IFunctionCallObject[], uri: vscode
             continue;
           }
 
-          if (line.includes("function ") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
+          if (line.includes("function ") || line.includes("=>") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
             fc.definitionLocation = locations[0];
           }
           continue;
@@ -212,7 +212,7 @@ export async function getDefinitions(fcArray: IFunctionCallObject[], uri: vscode
             break;
           }
 
-          if (line.includes("function ") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
+          if (line.includes("function ") || line.includes("=>") || (line.includes("(") && line.includes(")") && !line.includes("require"))) {
             fc.definitionLocation = location;
             break;
           }

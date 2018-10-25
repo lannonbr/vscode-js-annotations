@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.10.0-dev
+- [Bug] Fixed arrow functions without params not being used
+
 ## 0.9.1 - Oct 16, 2018
 - [Bug] TS casted params were incorrectly annotated by one column.
 

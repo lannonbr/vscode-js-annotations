@@ -90,7 +90,11 @@ function grabDefLineParams(definitionLine: string): string {
   startIdx = definitionLine.indexOf("(");
 
   if (startIdx === -1) {
-    return "";
+    if (definitionLine.includes("=>")) {
+      return /=?\s*(\w+)\s*=>/.exec(definitionLine)[1] || "";
+    } else {
+      return "";
+    }
   } else {
     startIdx++;
   }
