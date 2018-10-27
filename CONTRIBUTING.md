@@ -8,6 +8,28 @@ If you want to work on something, look in the Issues tab first. Both a benefit t
 
 If you want to make something and there isn't an issue on it, post one and I will likely look at it within 24 hours max.
 
+Next, make sure you have the following installed:
+
+* Node v4 or later
+* Visual Studio Code
+
+## Download the Extension
+
+Grab the repo from GitHub here with these commands:
+
+```
+git clone https://github.com/lannonbr/vscode-js-annotations.git
+cd vscode-js-annotations
+```
+
+Install it with the following commands:
+
+```
+npm install
+```
+
+Next, if you open the repo in VS Code and go to the Debug Panel and choose the `Extension` launch option, it will spin up the latest version of the extension. If you already have it installed through VS Code, it will overwrite the old version with this one.
+
 ## Unit Tests
 
 We use the VS Code testrunner for E2E tests which uses Mocha behind the scenes. To run all of the tests, open the Debug tag in VS Code and switch to the `Extension Tests` launch option.
