@@ -42,6 +42,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
           // skip when arg and param match and hideIfEqual config is on
           if (hideIfEqual && fc.paramNames[idx] === paramList[idx]) {
+            counter++; // Still tick the counter even if skipping the annotation
             continue;
           }
 
