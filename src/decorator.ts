@@ -90,7 +90,7 @@ async function loadDefinitionDocument(uri: vscode.Uri, documentCache: any) {
 
   // Currently index documentCache by the filename (TODO: Figure out better index later)
   const pathNameArr = uri.fsPath.split("/");
-  const pathName = pathNameArr[pathNameArr.length - 1];
+  const pathName = pathNameArr[pathNameArr.length - 2] + "/" + pathNameArr[pathNameArr.length - 1];
 
   // If the document is not present in the cache, load it from the filesystem, otherwise grab from the cache
   if (documentCache[pathName] === undefined) {

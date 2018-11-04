@@ -82,6 +82,11 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: IFunctionCallO
 
         startArr = [start.line - 1, start.column];
         endArr = [end.line - 1, end.column];
+      } else if (call.callee.type === "CallExpression") {
+        const { start, end } = call.callee.arguments[0].loc;
+
+        startArr = [start.line - 1, start.column];
+        endArr = [end.line - 1, end.column];
       } else {
         const { start, end } = call.callee.loc;
 
@@ -101,6 +106,7 @@ function lookForFunctionCalls(editor: vscode.TextEditor, fcArray: IFunctionCallO
       }
 
       const newFunctionCallObject: IFunctionCallObject = {
+        calleeCallee: call.callee.type === "CallExpression",
         functionName: calleeName,
         functionRange: new vscode.Range(startPos, endPos),
         lineNumber: startPos.line
@@ -189,7 +195,25 @@ export async function getDefinitions(fcArray: IFunctionCallObject[], uri: vscode
         // If one location, only return if it has some function definition of some sort
         if (locations.length === 1) {
           const document = await vscode.workspace.openTextDocument(locations[0].uri);
-          const line = document.lineAt(locations[0].range.start).text;
+          let line;
+
+          if (fc.calleeCallee) {
+            const text = document.getText().split("\n");
+
+            let num;
+            for (num = 0; num < text.length; num++) {
+              if (text[num].includes("module.exports") && (text[num].includes("=>") || text[num].includes("function"))) {
+                line = document.lineAt(num).text;
+                break;
+              }
+            }
+
+            const defLocation = new vscode.Location(locations[0].uri, new vscode.Position(num, 0));
+            fc.definitionLocation = defLocation;
+            continue;
+          } else {
+            line = document.lineAt(locations[0].range.start).text;
+          }
 
           if (line.includes("constructor")) {
             fc.definitionLocation = locations[0];
