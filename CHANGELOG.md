@@ -4,6 +4,7 @@
 - [Bug] Fixed arrow functions without params not being used
 - [Bug] Expressions which were immediately invoked functions after importing ("require("module")(params)) now annotated properly
 - [Bug] documentCache was not specific enough and was tripping over itself. Now using last two parts of filepath for documentCache.
+- [Bug] Typescript fake `this` parameter won't be used when annotating
 - [Dev] Added script to package.json to run just unit tests
 
 ## 0.9.1 - Oct 16, 2018

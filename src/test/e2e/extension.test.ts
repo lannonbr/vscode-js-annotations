@@ -69,6 +69,14 @@ suite("js annotations", () => {
 
     vscode.commands.executeCommand("workbench.action.closeActiveEditor");
   });
+
+  test("Should remove `this` from typescript files", async () => {
+    const [decArray, errDecArray] = await getDecorationsFromExample("this.ts");
+
+    assert.deepEqual(decArray.length, 1);
+    assert.strictEqual(decArray[0].renderOptions.before.contentText, " str: ");
+    assert.deepEqual(errDecArray.length, 0);
+  });
 });
 
 function sleep(ms: number): Promise<void> {

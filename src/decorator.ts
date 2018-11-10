@@ -17,7 +17,12 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
   const document = await loadDefinitionDocument(fc.definitionLocation.uri, documentCache);
   const definitionLine = document.lineAt(fc.definitionLocation.range.start.line).text;
 
-  const paramList = grabPossibleParameters(fc, definitionLine);
+  let paramList = grabPossibleParameters(fc, definitionLine);
+
+  // Remove first parameter from list if it equals `this` in a TS file
+  if (currentEditor.document.languageId === "typescript" && paramList[0] === "this") {
+    paramList = paramList.slice(1);
+  }
 
   if (paramList.length > 0) {
     const functionCallLine = currentEditor.document.lineAt(fc.lineNumber).text;
