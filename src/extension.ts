@@ -57,7 +57,7 @@ async function run(ctx: vscode.ExtensionContext, editor: vscode.TextEditor | und
     return;
   }
 
-  const supportedLanguages = ["javascript", "typescript"];
+  const supportedLanguages = ["javascript", "typescript", "javascriptreact", "typescriptreact"];
 
   if (supportedLanguages.indexOf(editor.document.languageId) === -1) {
     return;

@@ -77,6 +77,12 @@ suite("js annotations", () => {
     assert.strictEqual(decArray[0].renderOptions.before.contentText, " str: ");
     assert.deepEqual(errDecArray.length, 0);
   });
+
+  test("Should work for JSX files", async () => {
+    const [decArray, errDecArray] = await getDecorationsFromExample("react.jsx");
+    assert.deepEqual(decArray.length, 1);
+    assert.deepEqual(errDecArray.length, 0);
+  });
 });
 
 function sleep(ms: number): Promise<void> {

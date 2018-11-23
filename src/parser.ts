@@ -11,11 +11,60 @@ export function getFunctionCalls(sourceCode: string, editor: vscode.TextEditor):
     options.parser = require("recast/parsers/esprima");
   } else if (editor.document.languageId === "typescript") {
     options.parser = require("recast/parsers/typescript");
+  } else if (editor.document.languageId === "javascriptreact") {
+    options.parser = require("recast/parsers/babel");
+  } else if (editor.document.languageId === "typescriptreact") {
+    options.parser = {
+      parse(source) {
+        const babelParser = require("recast/parsers/babel").parser;
+        const opts = {
+          allowImportExportEverywhere: true,
+          allowReturnOutsideFunction: true,
+          plugins: [
+            "asyncGenerators",
+            "bigInt",
+            "classPrivateMethods",
+            "classPrivateProperties",
+            "classProperties",
+            "decorators-legacy",
+            "doExpressions",
+            "dynamicImport",
+            "exportDefaultFrom",
+            "exportExtensions",
+            "exportNamespaceFrom",
+            "functionBind",
+            "functionSent",
+            "importMeta",
+            "nullishCoalescingOperator",
+            "numericSeparator",
+            "objectRestSpread",
+            "optionalCatchBinding",
+            "optionalChaining",
+            ["pipelineOperator", { proposal: "minimal" }],
+            "throwExpressions",
+            "typescript",
+            "jsx"
+          ],
+          sourceType: "unambiguous",
+          startLine: 1,
+          strictMode: false,
+          tokens: true
+        };
+
+        return babelParser.parse(source, opts);
+      }
+    };
   }
 
   sourceCode = removeShebang(sourceCode);
 
-  const ast = recast.parse(sourceCode, options);
+  let ast;
+
+  try {
+    ast = recast.parse(sourceCode, options);
+  } catch (err) {
+    console.log(err.message);
+  }
 
   fcArray = lookForFunctionCalls(editor, fcArray, ast.program.body);
 
