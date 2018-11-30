@@ -1,11 +1,13 @@
 # Changelog
 
 ## 0.10.0-dev
+- [Feature] Support for React files (only with the .JSX / .TSX extensions for now. Support for all files in the future)
 - [Bug] Fixed arrow functions without params not being used
 - [Bug] Expressions which were immediately invoked functions after importing ("require("module")(params)) now annotated properly
 - [Bug] documentCache was not specific enough and was tripping over itself. Now using last two parts of filepath for documentCache.
 - [Bug] Typescript fake `this` parameter won't be used when annotating
 - [Dev] Added script to package.json to run just unit tests
+- [Dev] Contributing Guide to describe how to install, test, and debug the extension.
 
 ## 0.9.1 - Oct 16, 2018
 - [Bug] TS casted params were incorrectly annotated by one column.

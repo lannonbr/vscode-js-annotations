@@ -37,8 +37,10 @@ Thanks to the following Contributors who have helped with this project in any wa
 
 * Flavio Copes ([@flaviocopes](https://github.com/flaviocopes)) (PRs)
 * Guilherme Amorim ([@GuiAmPm](https://github.com/GuiAmPm)) (PRs)
-* Mike Erickson ([@mikeerickson](https://github.com/mikeerickson)) (PRs, Issues)
+* Laurens Bosscher ([@LaurensBosscher](https://github.com/LaurensBosscher)) (Issues)
 * Luca Steeb ([@steebchen](https://github.com/steebchen)) (Issues)
+* Mike Erickson ([@mikeerickson](https://github.com/mikeerickson)) (PRs, Issues)
 * Nigel Scott ([@Gruntfuggly](https://github.com/Gruntfuggly)) (Issues)
 * Nurbol Alpysbayev ([@anurbol](https://github.com/anurbol)) (Issues)
 * Sioxas ([@sioxas](https://github.com/Sioxas)) (Issues)
+* Thibault Malbranche ([@Titozzz](https://github.com/Titozzz)) (Issues)
