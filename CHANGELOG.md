@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.10.0-dev
+## 0.10.0 - Dec 2, 2018
 - [Feature] Support for React files (only with the .JSX / .TSX extensions for now. Support for all files in the future)
 - [Bug] Fixed arrow functions without params not being used
 - [Bug] Expressions which were immediately invoked functions after importing ("require("module")(params)) now annotated properly

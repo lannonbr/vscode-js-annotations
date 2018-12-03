@@ -10,7 +10,7 @@ If you want to make something and there isn't an issue on it, post one and I wil
 
 Next, make sure you have the following installed:
 
-* Node v4 or later
+* Node v8 or later
 * Visual Studio Code
 
 ## Download the Extension
