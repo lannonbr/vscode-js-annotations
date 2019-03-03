@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.10.1 - Mar 3, 2019
+- [Hotfix] Updating deps to get rid of security vulns.
+
 ## 0.10.0 - Dec 2, 2018
 - [Feature] Support for React files (only with the .JSX / .TSX extensions for now. Support for all files in the future)
 - [Bug] Fixed arrow functions without params not being used

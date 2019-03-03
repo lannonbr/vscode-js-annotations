@@ -2,7 +2,7 @@
   "name": "vscode-js-annotations",
   "displayName": "JS Parameter Annotations",
   "description": "Annotations for parameters in your JS / TS Files to mimic named parameters",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "publisher": "lannonbr",
   "engines": {
     "vscode": "^1.25.0"
@@ -115,7 +115,7 @@
     "@types/node": "^7.0.43",
     "husky": "^1.0.1",
     "typescript": "^3.0.0",
-    "vscode": "^1.1.6"
+    "vscode": "^1.1.30"
   },
   "dependencies": {
     "babylon": "^7.0.0-beta.47",
