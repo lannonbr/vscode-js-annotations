@@ -42,5 +42,6 @@ Thanks to the following Contributors who have helped with this project in any wa
 * Mike Erickson ([@mikeerickson](https://github.com/mikeerickson)) (PRs, Issues)
 * Nigel Scott ([@Gruntfuggly](https://github.com/Gruntfuggly)) (Issues)
 * Nurbol Alpysbayev ([@anurbol](https://github.com/anurbol)) (Issues)
+* Roman Pavlov ([@romap0](https://github.com/romap0)) (PRs)
 * Sioxas ([@sioxas](https://github.com/Sioxas)) (Issues)
 * Thibault Malbranche ([@Titozzz](https://github.com/Titozzz)) (Issues)

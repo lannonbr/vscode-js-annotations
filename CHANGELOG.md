@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.11.0 - Mar 11, 2019
+- [Feature] Added option to disable leading whitespace
+
 ## 0.10.1 - Mar 3, 2019
 - [Hotfix] Updating deps to get rid of security vulns.
 
