@@ -79,7 +79,9 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
               continue;
             }
-            const spacer = (counter === 0) ? " " : "";
+
+            const showFirstSpace = vscode.workspace.getConfiguration("jsannotations").get("showFirstSpace");
+            const spacer = (counter === 0 && showFirstSpace) ? " " : "";
             decoration = Annotations.paramAnnotation(spacer + paramList[idx] + ": ", currentArgRange);
           }
           counter++;
