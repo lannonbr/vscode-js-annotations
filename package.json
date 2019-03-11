@@ -78,6 +78,11 @@
               "italic"
             ],
             "description": "Annotation styling of font-style CSS property"
+          },
+          "jsannotations.showFirstSpace": {
+            "type": "boolean",
+            "description": "Show leading whitespace for first paramater",
+            "default": true
           }
         }
       }
