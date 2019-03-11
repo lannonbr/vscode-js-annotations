@@ -81,7 +81,7 @@
           },
           "jsannotations.showFirstSpace": {
             "type": "boolean",
-            "description": "Show leading whitespace for first paramater",
+            "description": "Show leading whitespace for first parameter",
             "default": true
           }
         }
