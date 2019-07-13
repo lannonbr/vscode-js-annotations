@@ -118,7 +118,7 @@
   "devDependencies": {
     "@types/mocha": "^5.0.0",
     "@types/node": "^7.0.43",
-    "husky": "^1.0.1",
+    "husky": "^3.0.0",
     "typescript": "^3.0.0",
     "vscode": "^1.1.30"
   },
