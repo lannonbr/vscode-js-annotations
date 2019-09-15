@@ -79,6 +79,11 @@
             ],
             "description": "Annotation styling of font-style CSS property"
           },
+          "jsannotations.borderRadius": {
+            "type": "number",
+            "default": 5,
+            "description": "Annotation styling of border-radius CSS property in pixels"
+          },
           "jsannotations.showFirstSpace": {
             "type": "boolean",
             "description": "Show leading whitespace for first parameter",
@@ -95,6 +100,15 @@
           "dark": "#ccc",
           "light": "#444",
           "highContrast": "#444"
+        }
+      },
+      {
+        "id": "jsannotations.annotationBackground",
+        "description": "Specifies the background color for the annotations",
+        "defaults": {
+          "dark": "#FFFFFF10",
+          "light": "#00000010",
+          "highContrast": "#00000010"
         }
       }
     ],

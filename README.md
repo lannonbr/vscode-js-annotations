@@ -22,6 +22,7 @@ There currently is a few configurable settings in the extension
 | `jsannotations.hideDiagnostics` | Hide red squiggles under invalid parameters | false |
 | `jsannotations.fontWeight` | Annotation styling of font-weight CSS property | "400" |
 | `jsannotations.fontStyle` | Hide annotation if argument name matches parameter name | "italic" |
+| `jsannotations.borderRadius` | Annotation styling of border-radius CSS property in pixels | "5" |
 
 ## Themable Colors
 
@@ -30,6 +31,7 @@ JS Annotations provides a single themable color being the color of what the anno
 | Name | Description |
 |------|-------------|
 | `jsannotations.annotationForeground` | Specifies the foreground color for the annotations |
+| `jsannotations.annotationBackground` | Specifies the background color for the annotations |
 
 ## Contributors 👨‍💻 👩‍💻
 
