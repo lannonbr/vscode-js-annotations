@@ -21,7 +21,8 @@ There currently is a few configurable settings in the extension
 | `jsannotations.hideInvalidAnnotation` | Hide annotations for invalid params | true |
 | `jsannotations.hideDiagnostics` | Hide red squiggles under invalid parameters | false |
 | `jsannotations.fontWeight` | Annotation styling of font-weight CSS property | "400" |
-| `jsannotations.fontStyle` | Font style for annotations. | "italic" |
+| `jsannotations.fontStyle` | Font style for annotations | "italic" |
+| `jsannotations.showFirstSpace` | Show leading whitespace for first parameter | true |
 
 ## Themable Colors
 
