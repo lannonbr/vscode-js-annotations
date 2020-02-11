@@ -13,6 +13,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
   const hideIfEqual = vscode.workspace.getConfiguration("jsannotations").get("hideIfEqual");
   const willShowDiagnostics = vscode.workspace.getConfiguration("jsannotations").get("hideDiagnostics") === false;
   const willShowErrorAnnotation = vscode.workspace.getConfiguration("jsannotations").get("hideInvalidAnnotation") === false;
+  const showFirstSpace = vscode.workspace.getConfiguration("jsannotations").get("showFirstSpace");
 
   const document = await loadDefinitionDocument(fc.definitionLocation.uri, documentCache);
   const definitionLine = document.lineAt(fc.definitionLocation.range.start.line).text;
@@ -41,6 +42,7 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
 
     if (fc.paramLocations && fc.paramNames) {
       let counter = 0;
+
       for (const ix in fc.paramLocations) {
         if (fc.paramLocations.hasOwnProperty(ix)) {
           const idx = parseInt(ix, 10);
@@ -54,9 +56,10 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
           let decoration: vscode.DecorationOptions;
 
           const currentArgRange = fc.paramLocations[idx];
+          const spacer = (counter === 0 && showFirstSpace) ? " " : "";
 
           if (restParamIdx !== -1 && idx >= restParamIdx) {
-            decoration = Annotations.paramAnnotation(paramList[restParamIdx] + `[${idx - restParamIdx}]: `, currentArgRange);
+            decoration = Annotations.paramAnnotation(spacer + paramList[restParamIdx] + `[${idx - restParamIdx}]: `, currentArgRange);
           } else {
             if (idx >= paramList.length) {
               if (currentEditor.document.languageId === "javascript" && willShowDiagnostics) {
@@ -80,8 +83,6 @@ export async function decorateFunctionCall(currentEditor: vscode.TextEditor, doc
               continue;
             }
 
-            const showFirstSpace = vscode.workspace.getConfiguration("jsannotations").get("showFirstSpace");
-            const spacer = (counter === 0 && showFirstSpace) ? " " : "";
             decoration = Annotations.paramAnnotation(spacer + paramList[idx] + ": ", currentArgRange);
           }
           counter++;
