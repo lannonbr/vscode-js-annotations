@@ -1,3 +1,7 @@
+# ⚠️ This repo is no longer being maintained. See [#92](https://github.com/lannonbr/vscode-js-annotations/issues/92)
+
+---
+
 # JS / TS Parameter Annotations for Visual Studio Code
 
 [![VS Marketplace Version](https://vsmarketplacebadge.apphb.com/version-short/lannonbr.vscode-js-annotations.svg)](https://marketplace.visualstudio.com/items?itemName=lannonbr.vscode-js-annotations)
