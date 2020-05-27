@@ -1,18 +1,23 @@
-import { DecorationInstanceRenderOptions, DecorationOptions, Range, ThemeColor, workspace } from "vscode";
+import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Range, ThemeColor, workspace } from "vscode";
 
 export class Annotations {
   public static paramAnnotation(message: string, range: Range): DecorationOptions {
+
+    const getConfiguration = (section: string): string =>
+      workspace.getConfiguration("jsannotations").get(section);
 
     return {
       range,
       renderOptions: {
         before: {
+          backgroundColor: new ThemeColor("jsannotations.annotationBackground"),
+          borderRadius: getConfiguration("borderRadius") + "px",
           color: new ThemeColor("jsannotations.annotationForeground"),
           contentText: message,
-          fontStyle: workspace.getConfiguration("jsannotations").get("fontStyle"),
-          fontWeight: workspace.getConfiguration("jsannotations").get("fontWeight"),
+          fontStyle: getConfiguration("fontStyle"),
+          fontWeight: getConfiguration("fontWeight")
         }
-      } as DecorationInstanceRenderOptions
+      } as DecorationRenderOptions
     } as DecorationOptions;
   }
 
