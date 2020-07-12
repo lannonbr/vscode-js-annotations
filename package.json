@@ -116,7 +116,7 @@
     "lint": "node ./node_modules/.bin/tslint --project ."
   },
   "devDependencies": {
-    "@types/mocha": "^5.0.0",
+    "@types/mocha": "^8.0.0",
     "@types/node": "^7.0.43",
     "husky": "^1.0.1",
     "typescript": "^3.0.0",
