@@ -124,7 +124,7 @@
   },
   "dependencies": {
     "babylon": "^7.0.0-beta.47",
-    "recast": "^0.16.0",
+    "recast": "^0.20.0",
     "tslint": "5.12.0"
   },
   "husky": {
